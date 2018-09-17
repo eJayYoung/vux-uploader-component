@@ -5,7 +5,7 @@
 [weui的实现demo](https://weui.io/#uploader)
 
 ## Todo
-- [ ] 使用h5的file capture调用手机相机和相册
+- [x] 使用h5的html media capture调用手机相机
 - [ ] 使用fileReader + canvas 绘制内存中的照片到浏览器中
 - [ ] 图片的预览
 - [ ] 图片的删除

@@ -7,7 +7,7 @@
     <div class="content">
       <uploader
         :files="[
-          'https://weui.io/images/pic_160.png',
+          './src/assets/pic_160.png',
         ]"
       />
     </div>
@@ -32,6 +32,10 @@ body {
   padding: 0;
   p {
     margin: 0;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
   }
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
