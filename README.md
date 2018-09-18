@@ -5,11 +5,11 @@
 [weui的实现demo](https://weui.io/#uploader)
 
 ## Todo
-- [x] 使用h5的html media capture调用手机相机
-- [ ] 使用fileReader + canvas 绘制内存中的照片到浏览器中
+- [x] 使用h5的Html Media Capture调用手机相机
+- [x] 使用FileReader读取内存中的文件(图片)
+- [ ] 使用canvas实现图片的压缩
 - [ ] 图片的预览
 - [ ] 图片的删除
-- [ ] 图片的压缩
 - [ ] 支持配置url上传
 
 ## Build Setup
