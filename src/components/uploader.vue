@@ -2,17 +2,17 @@
   <div class="vux-uploader">
     <div class="vux-uploader_hd">
       <p class="vux-uploader_title">{{ title }}</p>
-      <div class="vux-uploader_info">{{ files.length }} / {{ max }}</div>
+      <div class="vux-uploader_info">{{ fileList.length }} / {{ max }}</div>
     </div>
     <div class="vux-uploader_bd">
       <ul class="vux-uploader_files">
-        <li class="vux-uploader_file" v-for="(item, index) in files" :key="index" :style="{
+        <li class="vux-uploader_file" v-for="(item, index) in fileList" :key="index" :style="{
           backgroundImage: `url(${item})`
         }">
         </li>
       </ul>
       <div class="vux-uploader_input-box" v-show="files.length < max">
-        <input class="vux-uploader_input" ref="input" type="file" :accept="accept" :capture="capture"/>
+        <input class="vux-uploader_input" ref="input" type="file" :accept="accept" :capture="capture" @change="change"/>
       </div>
     </div>
   </div>
@@ -41,7 +41,37 @@ export default {
       type: Boolean | String,
       default: "camera"
     }
-  }
+  },
+  data() {
+    return {
+      fileList: [],
+    };
+  },
+  created() {
+    this.fileList = this.fileList.concat(this.files);
+  },
+  methods: {
+    change(e) {
+      const target = e.target || e.srcElement;
+      const file = target.files[0];
+      this.readFile(file);
+    },
+    readFile(file) {
+      let reader;
+      if (typeof FileReader !== 'undefined') {
+        reader = new FileReader();
+      } else {
+        alert('your brower are not support FileReader');
+      }
+      console.log(reader);
+      reader.onload = e => {
+        const result = e.target.result;
+        this.fileList.push(result);
+        console.log(this.fileList);
+      }
+      reader.readAsDataURL(file);
+    }
+  },
 };
 </script>
 <style lang="less">
