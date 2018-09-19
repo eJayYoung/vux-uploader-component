@@ -40,7 +40,15 @@ export default {
     capture: {
       type: Boolean | String,
       default: "camera"
-    }
+    },
+    compress: {
+      type: Boolean,
+      default: true,
+    },
+    maxWidth: {
+      type: String | Number,
+      default: 500,
+    },
   },
   data() {
     return {
@@ -49,6 +57,7 @@ export default {
   },
   created() {
     this.fileList = this.fileList.concat(this.files);
+    console.log(this);
   },
   methods: {
     change(e) {
@@ -57,20 +66,47 @@ export default {
       this.readFile(file);
     },
     readFile(file) {
+      const { compress, compressImage, fileList } = this;
       let reader;
       if (typeof FileReader !== 'undefined') {
         reader = new FileReader();
+      } else if (window.FileReader) {
+        reader = new window.FileReader();
       } else {
         alert('your brower are not support FileReader');
       }
-      console.log(reader);
       reader.onload = e => {
-        const result = e.target.result;
-        this.fileList.push(result);
-        console.log(this.fileList);
+        const rawDataUrl = e.target.result;
+        if (compress) {
+          compressImage(rawDataUrl, (dataUrl) => {
+            fileList.push(dataUrl);
+          })
+        } else {
+          fileList.push(rawDataUrl);
+        }
       }
       reader.readAsDataURL(file);
-    }
+    },
+    compressImage(dataUrl, cb) {
+      const image = new Image();
+      console.log('before compress', dataUrl);
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        let w = Math.min(this.maxWidth, image.width);
+        let h = image.height * (w / image.width);
+        canvas.width = w;
+        canvas.height = h;
+        ctx.clearRect(0, 0, w, h);
+        ctx.drawImage(image, 0, 0, w, h);
+        const result = canvas.toDataURL('image/png');
+        const rate = (w / image.width) * 100;
+        console.log('compress rate', rate.toFixed(2) + '%');
+        console.log('after compress', result);
+        cb(result);
+      };
+      image.src = dataUrl;
+    },
   },
 };
 </script>
