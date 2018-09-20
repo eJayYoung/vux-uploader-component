@@ -7,7 +7,7 @@
 ## Todo
 - [x] 使用h5的Html Media Capture调用手机相机
 - [x] 使用FileReader读取内存中的文件(图片)
-- [ ] 使用canvas实现图片的压缩
+- [x] 使用canvas实现图片的压缩
 - [ ] 图片的预览
 - [ ] 图片的删除
 - [ ] 支持配置url上传
