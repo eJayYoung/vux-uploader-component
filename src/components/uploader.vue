@@ -8,15 +8,16 @@
       <ul class="vux-uploader_files">
         <li class="vux-uploader_file" v-for="(item, index) in fileList" :key="index" :style="{
           backgroundImage: `url(${item})`
-        }" @click="handleFileClick(item)">
+        }" @click="handleFileClick(item, index)">
         </li>
       </ul>
       <div class="vux-uploader_input-box" v-show="files.length < max">
         <input class="vux-uploader_input" ref="input" type="file" accept="image/*" :capture="capture" @change="change"/>
       </div>
     </div>
-    <div class="vux-uploader_previewer" id="previewer" @click="hidePreviewer()">
-      <span class="vux-uploader_preview-img" id="previewerImg"></span>
+    <div class="vux-uploader_previewer" id="previewer" @click="hidePreviewer">
+      <div class="vux-uploader_preview-img" id="previewerImg"></div>
+      <div class="vux-uploader_del" @click="deleteImg"></div>
     </div>
   </div>
 </template>
@@ -46,12 +47,13 @@ export default {
     },
     maxWidth: {
       type: String | Number,
-      default: 500
+      default: 400
     }
   },
   data() {
     return {
-      fileList: []
+      fileList: [],
+      currentIndex: 0,
     };
   },
   mounted() {
@@ -97,18 +99,18 @@ export default {
         canvas.height = h;
         ctx.clearRect(0, 0, w, h);
         ctx.drawImage(image, 0, 0, w, h);
-        const result = canvas.toDataURL("image/png");
+        const result = canvas.toDataURL("image/jpeg", 0.5);
         const rate = w / image.width * 100;
         console.log("compress rate", rate.toFixed(2) + "%");
         cb(result);
       };
       image.src = dataUrl;
     },
-    handleFileClick(item) {
-      console.log(item);
+    handleFileClick(item, index) {
       this.showPreviewer();
       const previewerImg = document.getElementById("previewerImg");
       previewerImg.style.backgroundImage = `url(${item})`;
+      this.currentIndex = index;
     },
     showPreviewer() {
       const previewer = document.getElementById("previewer");
@@ -123,6 +125,11 @@ export default {
         previewer.style.display = "none";
         previewer.style.opacity = 0;
       }
+    },
+    deleteImg() {
+      const { currentIndex, fileList } = this;
+      this.hidePreviewer();
+      fileList.splice(currentIndex, 1);
     }
   }
 };
@@ -216,6 +223,23 @@ export default {
       left: 0;
       background: center center no-repeat;
       background-size: contain;
+    }
+    .vux-uploader_del {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: #0d0d0d;
+      color: #ffffff;
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      font-family: 'weui';
+      &:after {
+        color: #ffffff;
+        font-size: 22px;
+        content: '\EA11';
+      }
     }
   }
 }
