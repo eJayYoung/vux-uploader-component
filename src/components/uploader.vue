@@ -22,6 +22,16 @@
   </div>
 </template>
 <script>
+import EXIF from "exif-js";
+import { detectVerticalSquash, detectSubsampling } from "../utils/index";
+// compatibility
+const URL =
+  window.URL && window.URL.createObjectURL
+    ? window.URL
+    : window.webkitURL && window.webkitURL.createObjectURL
+      ? window.webkitURL
+      : null;
+
 export default {
   name: "Uploader",
   props: {
@@ -53,7 +63,7 @@ export default {
   data() {
     return {
       fileList: [],
-      currentIndex: 0,
+      currentIndex: 0
     };
   },
   mounted() {
@@ -67,44 +77,40 @@ export default {
       this.readFile(file);
     },
     readFile(file) {
-      const { compress, compressImage, fileList } = this;
-      let reader;
-      if (typeof FileReader !== "undefined") {
-        reader = new FileReader();
-      } else if (window.FileReader) {
-        reader = new window.FileReader();
-      } else {
-        alert("your browser are not support FileReader");
-      }
-      reader.onload = e => {
-        const rawDataUrl = e.target.result;
-        if (compress) {
-          compressImage(rawDataUrl, dataUrl => {
+      const { renderImageToDataUrl, fileList } = this;
+      if (window.Blob && file instanceof Blob) {
+        if (!URL) {
+          throw Error("No createObjectURL function found to create blob url");
+        }
+        const image = new Image();
+        image.src = URL.createObjectURL(file);
+        const doSquash = !file || file.type === "image/jpeg";
+        image.onload = () => {
+          // 在调用EXIF的getData或者其他方法时，必须等image完全加载完   https://github.com/exif-js/exif-js#usage
+          EXIF.getData(image, function() {
+            const orientation = EXIF.getTag(this, "Orientation");
+            console.log("图片旋转编码: ", orientation);
+            const dataUrl = renderImageToDataUrl(image, orientation, doSquash);
             fileList.push(dataUrl);
           });
-        } else {
-          fileList.push(rawDataUrl);
-        }
-      };
-      reader.readAsDataURL(file);
+        };
+      }
     },
-    compressImage(dataUrl, cb) {
-      const image = new Image();
-      image.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        let w = Math.min(this.maxWidth, image.width);
-        let h = image.height * (w / image.width);
-        canvas.width = w;
-        canvas.height = h;
-        ctx.clearRect(0, 0, w, h);
-        ctx.drawImage(image, 0, 0, w, h);
-        const result = canvas.toDataURL("image/jpeg", 0.5);
-        const rate = w / image.width * 100;
-        console.log("compress rate", rate.toFixed(2) + "%");
-        cb(result);
-      };
-      image.src = dataUrl;
+    renderImageToDataUrl(image, orientation, doSquash) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      const vertSquashRatio = detectVerticalSquash(image);
+      console.log("垂直压缩比例: ", vertSquashRatio);
+      let w = Math.min(this.maxWidth, image.width);
+      let h = image.height * (w / image.width) / vertSquashRatio;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(image, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
+      const rate = w / image.width * 100;
+      console.log("compress rate", rate.toFixed(2) + "%");
+      return dataUrl;
     },
     handleFileClick(item, index) {
       this.showPreviewer();
@@ -234,11 +240,11 @@ export default {
       height: 60px;
       line-height: 60px;
       text-align: center;
-      font-family: 'weui';
+      font-family: "weui";
       &:after {
         color: #ffffff;
         font-size: 22px;
-        content: '\EA11';
+        content: "\EA11";
       }
     }
   }
