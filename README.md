@@ -2,22 +2,22 @@
 
 > a weui uploader implementation for vux
 
-[weui的实现demo](https://weui.io/#uploader)
+[weui 的实现 demo](https://weui.io/#uploader)
 
 ## Todo
-- [x] 使用h5的Html Media Capture调用手机相机
-- [x] 使用FileReader读取内存中的文件(图片)
-- [x] 使用canvas实现图片的压缩
- - [ ] bug: 图片过大导致浏览器奔溃
- - [ ] bug: ios safari 拍照完图片会自动旋转
- - [ ] pref: 压缩比例
+
+- [x] 使用 h5 的 Html Media Capture 调用手机相机
+- [x] 使用 URL.createObjectURL 获取内存里的图片地址
+- [x] ios safari 拍照完图片会自动旋转
+- [x] 根据设备像素比设置压缩比例
+- [x] 使用 canvas 获取图片压缩后的base64地址
 - [x] 图片的预览
 - [x] 图片的删除
 - [ ] 图片的上传
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 

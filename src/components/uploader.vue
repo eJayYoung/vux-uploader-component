@@ -93,7 +93,7 @@ export default {
           // 在调用EXIF的getData或者其他方法时，必须等image完全加载完   https://github.com/exif-js/exif-js#usage
           EXIF.getData(image, function() {
             const orientation = EXIF.getTag(this, "Orientation");
-            console.log("图片旋转编码: ", orientation);
+            console.log("EXIF orientation: ", orientation);
 
             const dataUrl = renderImageToDataUrl(image, orientation, doSquash);
             fileList.push(dataUrl);
@@ -109,35 +109,23 @@ export default {
 
       let w = image.naturalWidth;
       let h = image.naturalHeight;
-      console.log("图片原始宽高", w, h);
+      console.log("Image origin width & height:", w, h);
 
       const subsampled = detectSubsampling(image);
       if (subsampled) {
         w /= 2;
         h /= 2;
-        console.log("subsampling后的image宽高", w, h);
       }
 
       const vertSquashRatio = detectVerticalSquash(image);
-      console.log("垂直压缩比例: ", vertSquashRatio);
+      console.log("Vertical Squash Ratio: ", vertSquashRatio);
 
       // 屏幕的设备像素比
-      const devicePixelRatio = window.devicePixelRatio || 1;
-      // 浏览器在渲染canvas之前存储画布信息的像素比
-      const backingStoreRatio =
-        ctx.webkitBackingStorePixelRatio ||
-        ctx.mozBackingStorePixelRatio ||
-        ctx.msBackingStorePixelRatio ||
-        ctx.oBackingStorePixelRatio ||
-        ctx.backingStorePixelRatio ||
-        1;
-      // canvas的实际渲染倍率
-      const ratio = devicePixelRatio / backingStoreRatio;
-      console.log('屏幕设备像素比', devicePixelRatio, backingStoreRatio, ratio);
+      const ratio = window.devicePixelRatio || 1;
+      console.log('Device Ratio: ', ratio);
 
       const dw = Math.min(this.maxWidth, w) * ratio;
       const dh = h * (dw / w) / vertSquashRatio;
-      console.log("压缩比例处理后的image宽高", dw, dh);
 
       transformCoordinate(canvas, ctx, dw, dh, orientation);
 
@@ -146,7 +134,7 @@ export default {
 
       const dataUrl = canvas.toDataURL("image/jpeg");
       const rate = dw / w * 100;
-      console.log("compress rate", rate.toFixed(2) + "%");
+      console.log("Compress Ratio: ", rate.toFixed(2) + "%");
       return dataUrl;
     },
     handleFileClick(item, index) {
