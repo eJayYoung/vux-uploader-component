@@ -42,7 +42,6 @@ function detectVerticalSquash(img) {
 function detectSubsampling(img) {
   var iw = img.naturalWidth,
     ih = img.naturalHeight;
-  console.log("图片宽高: ", iw, ih);
   if (iw * ih > 1024 * 1024) {
     // subsampling may happen over megapixel image
     var canvas = document.createElement("canvas");

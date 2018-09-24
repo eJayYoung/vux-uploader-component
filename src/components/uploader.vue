@@ -23,7 +23,11 @@
 </template>
 <script>
 import EXIF from "exif-js";
-import { detectVerticalSquash, detectSubsampling } from "../utils/index";
+import {
+  detectVerticalSquash,
+  detectSubsampling,
+  transformCoordinate
+} from "../utils/index";
 // compatibility
 const URL =
   window.URL && window.URL.createObjectURL
@@ -57,7 +61,7 @@ export default {
     },
     maxWidth: {
       type: String | Number,
-      default: 400
+      default: 500
     }
   },
   data() {
@@ -90,25 +94,58 @@ export default {
           EXIF.getData(image, function() {
             const orientation = EXIF.getTag(this, "Orientation");
             console.log("图片旋转编码: ", orientation);
+
             const dataUrl = renderImageToDataUrl(image, orientation, doSquash);
             fileList.push(dataUrl);
+            URL.revokeObjectURL(image.src);
           });
         };
       }
     },
     renderImageToDataUrl(image, orientation, doSquash) {
+
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
+
+      let w = image.naturalWidth;
+      let h = image.naturalHeight;
+      console.log("图片原始宽高", w, h);
+
+      const subsampled = detectSubsampling(image);
+      if (subsampled) {
+        w /= 2;
+        h /= 2;
+        console.log("subsampling后的image宽高", w, h);
+      }
+
       const vertSquashRatio = detectVerticalSquash(image);
       console.log("垂直压缩比例: ", vertSquashRatio);
-      let w = Math.min(this.maxWidth, image.width);
-      let h = image.height * (w / image.width) / vertSquashRatio;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(image, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL("image/jpeg", 0.8);
-      const rate = w / image.width * 100;
+
+      // 屏幕的设备像素比
+      const devicePixelRatio = window.devicePixelRatio || 1;
+      // 浏览器在渲染canvas之前存储画布信息的像素比
+      const backingStoreRatio =
+        ctx.webkitBackingStorePixelRatio ||
+        ctx.mozBackingStorePixelRatio ||
+        ctx.msBackingStorePixelRatio ||
+        ctx.oBackingStorePixelRatio ||
+        ctx.backingStorePixelRatio ||
+        1;
+      // canvas的实际渲染倍率
+      const ratio = devicePixelRatio / backingStoreRatio;
+      console.log('屏幕设备像素比', devicePixelRatio, backingStoreRatio, ratio);
+
+      const dw = Math.min(this.maxWidth, w) * ratio;
+      const dh = h * (dw / w) / vertSquashRatio;
+      console.log("压缩比例处理后的image宽高", dw, dh);
+
+      transformCoordinate(canvas, ctx, dw, dh, orientation);
+
+      ctx.clearRect(0, 0, dw, dh);
+      ctx.drawImage(image, 0, 0, dw, dh);
+
+      const dataUrl = canvas.toDataURL("image/jpeg");
+      const rate = dw / w * 100;
       console.log("compress rate", rate.toFixed(2) + "%");
       return dataUrl;
     },
