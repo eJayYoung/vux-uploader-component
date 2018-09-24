@@ -1,6 +1,6 @@
 {
   "name": "vux-uploader",
-  "description": "a weui uploader implementation for vux",
+  "description": "vux uploader implementation for weui",
   "version": "1.0.0",
   "author": "eJay",
   "license": "MIT",
