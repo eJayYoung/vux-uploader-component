@@ -2,6 +2,9 @@
 
 vux uploader implementation for weui
 
+## Usage
+
+
 ## Mobile demo
 ![](./src/assets/qrcode.png)
 > scan the qrcode and have a test in your device
