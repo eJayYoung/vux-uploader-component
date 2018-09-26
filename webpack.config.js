@@ -67,6 +67,11 @@ module.exports = {
   devtool: '#eval-source-map',
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify(`${process.env.NODE_ENV}`)
+      }
+    }),
   ],
 }
 
@@ -74,11 +79,7 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"'
-      }
-    }),
+
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
