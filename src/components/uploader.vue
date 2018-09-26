@@ -28,7 +28,8 @@ import {
   detectSubsampling,
   transformCoordinate
 } from "../utils/index";
-// compatibility
+
+// compatibility for window.URL
 const URL =
   window.URL && window.URL.createObjectURL
     ? window.URL
@@ -109,7 +110,7 @@ export default {
 
       let w = image.naturalWidth;
       let h = image.naturalHeight;
-      console.log("Image origin width & height:", w, h);
+      // console.log("Image origin width & height:", w, h);
 
       const subsampled = detectSubsampling(image);
       if (subsampled) {
@@ -118,11 +119,11 @@ export default {
       }
 
       const vertSquashRatio = detectVerticalSquash(image);
-      console.log("Vertical Squash Ratio: ", vertSquashRatio);
+      // console.log("Vertical Squash Ratio: ", vertSquashRatio);
 
       // 屏幕的设备像素比
       const ratio = window.devicePixelRatio || 1;
-      console.log('Device Ratio: ', ratio);
+      // console.log('Device Ratio: ', ratio);
 
       const dw = Math.min(this.maxWidth, w) * ratio;
       const dh = h * (dw / w) / vertSquashRatio;
@@ -134,7 +135,7 @@ export default {
 
       const dataUrl = canvas.toDataURL("image/jpeg");
       const rate = dw / w * 100;
-      console.log("Compress Ratio: ", rate.toFixed(2) + "%");
+      // console.log("Compress Ratio: ", rate.toFixed(2) + "%");
       return dataUrl;
     },
     handleFileClick(item, index) {
