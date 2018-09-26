@@ -1,8 +1,11 @@
-# vux-uploader
+# real-vux-uploader
 
-vux uploader implementation for weui
+a html5 vue component implementation for [weui](https://weui.io/weui.js/) uploader
 
-## Usage
+## Install
+```bash
+npm install -S real-vux-uploader
+```
 
 
 ## Mobile demo
