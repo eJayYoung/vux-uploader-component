@@ -13,7 +13,9 @@
     "version": "npm run changelog",
     "prepublishOnly": "npm run build:prod"
   },
-  "pre-push": "build:demo",
+  "pre-commit": [
+    "npm run build:demo"
+  ],
   "dependencies": {
     "exif-js": "^2.3.0"
   },
@@ -36,7 +38,6 @@
     "file-loader": "^1.1.4",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
-    "pre-push": "^0.1.1",
     "vconsole": "^3.2.0",
     "vue": "^2.5.17",
     "vue-loader": "^13.0.5",
