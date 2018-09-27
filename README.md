@@ -1,6 +1,6 @@
 # real-vux-uploader
 
-a html5 vue component implementation for [weui](https://weui.io/weui.js/) uploader
+a mobile vue component implementation for [weui](https://weui.io/weui.js/) uploader
 
 ## Install
 ```bash

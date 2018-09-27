@@ -27,7 +27,7 @@ import {
   detectVerticalSquash,
   detectSubsampling,
   transformCoordinate
-} from "../utils/index";
+} from "../utils";
 
 // compatibility for window.URL
 const URL =
@@ -54,7 +54,7 @@ export default {
     },
     capture: {
       type: Boolean | String,
-      default: "camera"
+      default: false,
     },
     compress: {
       type: Boolean,

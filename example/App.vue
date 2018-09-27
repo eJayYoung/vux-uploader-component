@@ -7,7 +7,7 @@
     <div class="content">
       <uploader
         :files="[
-          './src/assets/pic_160.png',
+          './assets/pic_160.png',
         ]"
       />
     </div>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import Uploader from './components/uploader';
+import Uploader from '../src/components/uploader';
 
 export default {
   name: 'app',

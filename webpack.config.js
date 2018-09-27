@@ -2,7 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './example/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
@@ -67,7 +67,6 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(`${process.env.NODE_ENV}`)
@@ -77,6 +76,7 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
+  module.exports.entry = './src/index.js';
   module.exports.externals = {
     'vue': 'Vue',
   }
