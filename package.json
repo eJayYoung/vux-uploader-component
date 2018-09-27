@@ -14,7 +14,7 @@
     "prepublishOnly": "npm run build:prod"
   },
   "pre-commit": [
-    "npm run build:demo"
+    "build:demo"
   ],
   "dependencies": {
     "exif-js": "^2.3.0"
