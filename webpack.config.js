@@ -4,8 +4,8 @@ var webpack = require('webpack')
 module.exports = {
   entry: './example/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
+    path: path.resolve(__dirname, './example'),
+    publicPath: '/example/',
     filename: 'build.js'
   },
   module: {
@@ -79,6 +79,11 @@ module.exports = {
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.entry = './src/index.js';
+  module.exports.output = {
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/dist/',
+    filename: 'build.js'
+  },
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
