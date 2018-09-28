@@ -11,7 +11,7 @@ npm install -S real-vux-uploader
 ## Mobile demo
 ![](./assets/qrcode.png)
 
-[https://ejayyoung.github.io/vux-uploader/index.html](https://ejayyoung.github.io/vux-uploader/index.html)
+[https://ejayyoung.github.io/real-vux-uploader/index.html](https://ejayyoung.github.io/real-vux-uploader/index.html)
 > scan the qrcode and have a test in your device
 
 ## Todo
