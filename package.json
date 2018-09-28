@@ -1,5 +1,5 @@
 {
-  "name": "real-vux-uploader",
+  "name": "vux-uploader-component",
   "description": "a html5 vue component implementation for weui uploader",
   "version": "1.0.0",
   "author": "eJay",

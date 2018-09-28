@@ -1,17 +1,17 @@
-# real-vux-uploader
+# vux-uploader-component
 
 a mobile vue component implementation for [weui](https://weui.io/weui.js/) uploader
 
 ## Install
 ```bash
-npm install -S real-vux-uploader
+npm install -S vux-uploader-component
 ```
 
 
 ## Mobile demo
 ![](./assets/qrcode.png)
 
-[https://ejayyoung.github.io/real-vux-uploader/index.html](https://ejayyoung.github.io/real-vux-uploader/index.html)
+[https://ejayyoung.github.io/vux-uploader-component/index.html](https://ejayyoung.github.io/vux-uploader-component/index.html)
 > scan the qrcode and have a test in your device
 
 ## Todo
