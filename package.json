@@ -7,7 +7,7 @@
   "main": "dist/build.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-    "build:demo": "rm -rf example/build.js && cross-env NODE_ENV=sample webpack --progress --hide-modules",
+    "build:demo": "rm -rf example/build.js && cross-env NODE_ENV=sample webpack --progress --hide-modules && git add .",
     "build:prod": "rm -rf dist/ && cross-env NODE_ENV=production webpack --progress --hide-modules",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "version": "npm run changelog",
