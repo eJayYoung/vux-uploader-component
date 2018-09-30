@@ -11,7 +11,8 @@
     "build:prod": "rm -rf dist/ && cross-env NODE_ENV=production webpack --progress --hide-modules",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "version": "npm run changelog",
-    "prepublishOnly": "npm run build:prod"
+    "prepublishOnly": "npm run build:prod",
+    "server": "node server.js"
   },
   "dependencies": {
     "exif-js": "^2.3.0"
@@ -32,6 +33,7 @@
     "conventional-changelog-cli": "^2.0.5",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
+    "express": "^4.16.3",
     "file-loader": "^1.1.4",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
