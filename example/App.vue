@@ -9,6 +9,7 @@
         :files="[
           './assets/pic_160.png',
         ]"
+        url="http://localhost:8002/upload"
       />
     </div>
   </div>

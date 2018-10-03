@@ -2,7 +2,7 @@
   <div class="vux-uploader">
     <div class="vux-uploader_hd">
       <p class="vux-uploader_title">{{ title }}</p>
-      <div class="vux-uploader_info">{{ fileList.length }} / {{ max }}</div>
+      <div class="vux-uploader_info">{{ fileList.length }} / {{ limit }}</div>
     </div>
     <div class="vux-uploader_bd">
       <ul class="vux-uploader_files">
@@ -11,7 +11,7 @@
         }" @click="handleFileClick(item, index)">
         </li>
       </ul>
-      <div class="vux-uploader_input-box" v-show="files.length < max">
+      <div class="vux-uploader_input-box" v-show="files.length < limit">
         <input class="vux-uploader_input" ref="input" type="file" accept="image/*" :capture="capture" @change="change"/>
       </div>
     </div>
@@ -26,7 +26,8 @@ import EXIF from "exif-js";
 import {
   detectVerticalSquash,
   detectSubsampling,
-  transformCoordinate
+  transformCoordinate,
+  compress,
 } from "../utils";
 
 // compatibility for window.URL
@@ -42,28 +43,32 @@ export default {
   props: {
     title: {
       type: String,
-      default: "图片上传"
+      default: "图片上传",
     },
     files: {
       type: Array,
-      default: []
+      default: [],
     },
-    max: {
+    limit: {
       type: Number | String,
-      default: 5
+      default: 5,
     },
     capture: {
       type: Boolean | String,
       default: false,
     },
-    compress: {
+    enableCompress: {
       type: Boolean,
-      default: true
+      default: true,
     },
     maxWidth: {
       type: String | Number,
-      default: 500
-    }
+      default: 1024,
+    },
+    compressQuality: {
+      type: String | Number,
+      default: 0.92,
+    },
   },
   data() {
     return {
@@ -76,67 +81,56 @@ export default {
     this.hidePreviewer();
   },
   methods: {
-    change(e) {
+    async change(e) {
+      const { enableCompress, maxWidth, compressQuality, fileList, convertBlobToCanvas } = this;
       const target = e.target || e.srcElement;
       const file = target.files[0];
-      this.readFile(file);
-    },
-    readFile(file) {
-      const { renderImageToDataUrl, fileList } = this;
-      if (window.Blob && file instanceof Blob) {
-        if (!URL) {
-          throw Error("No createObjectURL function found to create blob url");
+      if (file) {
+        const canvas = await convertBlobToCanvas(file);
+        let dataUrl;
+        if (enableCompress) {
+          compress(canvas, maxWidth)
+            .then(() => {
+              dataUrl = canvas.toDataURL("image/jpeg", compressQuality);
+              fileList.push(dataUrl);
+            });
+        } else {
+          dataUrl = canvas.toDataURL("image/jpeg");
+          fileList.push(dataUrl);
         }
+      } else {
+        console.error('you did cancel action, so that there is no file change, please confirm to choose a picture');
+      }
+    },
+    /**
+     * params File / Blob
+     * return canvas
+     */
+    convertBlobToCanvas(file) {
+      return new Promise((resolve, reject) => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
         const image = new Image();
-        image.src = URL.createObjectURL(file);
-        const doSquash = !file || file.type === "image/jpeg";
+        try {
+          image.src = URL.createObjectURL(file);
+        }
+        catch (e) {
+          throw Error(e);
+        }
         image.onload = () => {
-          // 在调用EXIF的getData或者其他方法时，必须等image完全加载完   https://github.com/exif-js/exif-js#usage
+          const dw = image.naturalWidth;
+          const dh = image.naturalHeight;
           EXIF.getData(image, function() {
             const orientation = EXIF.getTag(this, "Orientation");
-            console.log("EXIF orientation: ", orientation);
-
-            const dataUrl = renderImageToDataUrl(image, orientation, doSquash);
-            fileList.push(dataUrl);
+            transformCoordinate(canvas, ctx, dw, dh, orientation);
+            ctx.clearRect(0, 0, dw, dh);
+            ctx.drawImage(image, 0, 0, dw, dh);
             URL.revokeObjectURL(image.src);
+            resolve(canvas);
           });
         };
-      }
-    },
-    renderImageToDataUrl(image, orientation, doSquash) {
-
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      let w = image.naturalWidth;
-      let h = image.naturalHeight;
-      // console.log("Image origin width & height:", w, h);
-
-      const subsampled = detectSubsampling(image);
-      if (subsampled) {
-        w /= 2;
-        h /= 2;
-      }
-
-      const vertSquashRatio = detectVerticalSquash(image);
-      // console.log("Vertical Squash Ratio: ", vertSquashRatio);
-
-      // 屏幕的设备像素比
-      const ratio = window.devicePixelRatio || 1;
-      // console.log('Device Ratio: ', ratio);
-
-      const dw = Math.min(this.maxWidth, w) * ratio;
-      const dh = h * (dw / w) / vertSquashRatio;
-
-      transformCoordinate(canvas, ctx, dw, dh, orientation);
-
-      ctx.clearRect(0, 0, dw, dh);
-      ctx.drawImage(image, 0, 0, dw, dh);
-
-      const dataUrl = canvas.toDataURL("image/jpeg");
-      const rate = dw / w * 100;
-      // console.log("Compress Ratio: ", rate.toFixed(2) + "%");
-      return dataUrl;
+        image.onerror = (e) => reject(e);
+      });
     },
     handleFileClick(item, index) {
       this.showPreviewer();
@@ -162,6 +156,9 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
+    },
+    uploadFile() {
+
     }
   }
 };

@@ -117,8 +117,39 @@ function transformCoordinate(canvas, ctx, width, height, orientation) {
   }
 }
 
-module.exports = {
+/**
+ * compress image by canvas
+ */
+function compress(canvas, maxWidth) {
+  return new Promise((resolve, reject) => {
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    image.src = canvas.toDataURL("image/jpeg");
+    image.onload = () =>　{
+      let w = image.naturalWidth;
+      let h = image.naturalHeight;
+      const subsampled = detectSubsampling(image);
+      if (subsampled) {
+        w /= 2;
+        h /= 2;
+      }
+      const vertSquashRatio = detectVerticalSquash(image);
+      // 屏幕的设备像素比
+      const ratio = window.devicePixelRatio || 1;
+      const dw = Math.min(maxWidth, w);
+      const dh = h * (dw / w) / vertSquashRatio;
+      canvas.width = dw;
+      canvas.height = dh;
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(image, 0, 0, dw, dh);
+      resolve();
+    }
+  });
+}
+
+export {
   detectVerticalSquash,
   detectSubsampling,
   transformCoordinate,
+  compress,
 };
