@@ -23,12 +23,7 @@
 </template>
 <script>
 import EXIF from "exif-js";
-import {
-  detectVerticalSquash,
-  detectSubsampling,
-  transformCoordinate,
-  compress,
-} from "../utils";
+import { compress, transformCoordinate, dataURItoBlob } from "../utils";
 
 // compatibility for window.URL
 const URL =
@@ -43,32 +38,39 @@ export default {
   props: {
     title: {
       type: String,
-      default: "图片上传",
+      default: "图片上传"
     },
     files: {
       type: Array,
-      default: [],
+      default: []
     },
     limit: {
       type: Number | String,
-      default: 5,
+      default: 5
     },
     capture: {
       type: Boolean | String,
-      default: false,
+      default: false
     },
     enableCompress: {
       type: Boolean,
-      default: true,
+      default: true
     },
     maxWidth: {
       type: String | Number,
-      default: 1024,
+      default: 1024
     },
     compressQuality: {
       type: String | Number,
-      default: 0.92,
+      default: 0.92
     },
+    url: {
+      type: String
+    },
+    autoUpload: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -82,29 +84,40 @@ export default {
   },
   methods: {
     async change(e) {
-      const { enableCompress, maxWidth, compressQuality, fileList, convertBlobToCanvas } = this;
+      const {
+        enableCompress,
+        maxWidth,
+        compressQuality,
+        fileList,
+        convertBlobToCanvas,
+        uploadFile,
+        autoUpload
+      } = this;
       const target = e.target || e.srcElement;
       const file = target.files[0];
       if (file) {
         const canvas = await convertBlobToCanvas(file);
-        let dataUrl;
+        let dataURI;
         if (enableCompress) {
-          compress(canvas, maxWidth)
-            .then(() => {
-              dataUrl = canvas.toDataURL("image/jpeg", compressQuality);
-              fileList.push(dataUrl);
-            });
+          compress(canvas, maxWidth).then(() => {
+            dataURI = canvas.toDataURL("image/jpeg", compressQuality);
+            autoUpload && uploadFile(dataURI);
+            fileList.push(dataURI);
+          });
         } else {
-          dataUrl = canvas.toDataURL("image/jpeg");
-          fileList.push(dataUrl);
+          dataURI = canvas.toDataURL("image/jpeg");
+          autoUpload && uploadFile(dataURI)
+          fileList.push(dataURI);
         }
       } else {
-        console.error('you did cancel action, so that there is no file change, please confirm to choose a picture');
+        console.error(
+          "you did cancel action, so that there is no file change, please confirm to choose a picture"
+        );
       }
     },
     /**
-     * params File / Blob
-     * return canvas
+     * [params] File / Blob
+     * [return] Canvas
      */
     convertBlobToCanvas(file) {
       return new Promise((resolve, reject) => {
@@ -113,8 +126,7 @@ export default {
         const image = new Image();
         try {
           image.src = URL.createObjectURL(file);
-        }
-        catch (e) {
+        } catch (e) {
           throw Error(e);
         }
         image.onload = () => {
@@ -129,7 +141,7 @@ export default {
             resolve(canvas);
           });
         };
-        image.onerror = (e) => reject(e);
+        image.onerror = e => reject(e);
       });
     },
     handleFileClick(item, index) {
@@ -157,8 +169,27 @@ export default {
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
     },
-    uploadFile() {
-
+    uploadFile(dataURI) {
+      return new Promise((resolve, reject) => {
+        const { url, fileList } = this;
+        const formData = new FormData();
+        const blob = dataURItoBlob(dataURI);
+        const xhr = new XMLHttpRequest();
+        formData.append("file", blob);
+        xhr.open("POST", url);
+        xhr.send(formData);
+        xhr.onreadystatechange = () => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              const result = JSON.parse(xhr.responseText);
+              this.$emit("onSuccess", result);
+              resolve();
+            } else {
+              throw Error("XMLHttpRequest response status is " + xhr.status);
+            }
+          }
+        };
+      });
     }
   }
 };

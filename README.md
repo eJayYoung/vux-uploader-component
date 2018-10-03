@@ -21,7 +21,7 @@ npm install -S vux-uploader-component
 - [x] use canvas.toDataUrl get the compress base64 url
 - [x] previewer for picture
 - [x] delete for previewer
-- [ ] upload to remote sever
+- [x] support remote ajax post to upload
 
 ## Development
 
