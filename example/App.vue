@@ -10,6 +10,11 @@
           './assets/pic_160.png',
         ]"
         url="http://localhost:9090/upload"
+        @onChange="onChange"
+        @onPreview="onPreview"
+        @onDelete="onDelete"
+        @onSuccess="onSuccess"
+        @onError="onError"
       />
     </div>
   </div>
@@ -22,6 +27,23 @@ export default {
   name: 'app',
   components: {
     Uploader,
+  },
+  methods: {
+    onChange(file) {
+      console.log('onChange: ', file);
+    },
+    onPreview(e, idx) {
+      console.log('onPreview: ', e, idx);
+    },
+    onDelete(idx) {
+      console.log('onDelete: ', idx);
+    },
+    onSuccess(res) {
+      console.log('onSuccess: ', res);
+    },
+    onError(res) {
+      console.log('onError: ', res);
+    }
   },
 }
 </script>

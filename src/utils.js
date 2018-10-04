@@ -1,3 +1,5 @@
+import EXIF from "exif-js";
+
 /**
  * Detecting vertical squash in loaded image.
  * Fixes a bug which squash image vertically while drawing into canvas for some images.
@@ -51,7 +53,6 @@ function detectSubsampling(img) {
     // subsampled image becomes half smaller in rendering size.
     // check alpha channel value to confirm image is covering edge pixel or not.
     // if alpha value is 0 image is not covering, hence subsampled.
-    console.log("ctx getImageData", ctx.getImageData(0, 0, 1, 1));
     return ctx.getImageData(0, 0, 1, 1).data[3] === 0;
   } else {
     return false;
@@ -117,35 +118,6 @@ function transformCoordinate(canvas, ctx, width, height, orientation) {
   }
 }
 
-/**
- * compress image by canvas
- */
-function compress(canvas, maxWidth) {
-  return new Promise((resolve, reject) => {
-    const ctx = canvas.getContext("2d");
-    const image = new Image();
-    image.src = canvas.toDataURL("image/jpeg");
-    image.onload = () => {
-      let w = image.naturalWidth;
-      let h = image.naturalHeight;
-      const subsampled = detectSubsampling(image);
-      if (subsampled) {
-        w /= 2;
-        h /= 2;
-      }
-      const vertSquashRatio = detectVerticalSquash(image);
-      const dw = Math.min(maxWidth, w);
-      const dh = h * (dw / w) / vertSquashRatio;
-      canvas.width = dw;
-      canvas.height = dh;
-      ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(image, 0, 0, dw, dh);
-      resolve();
-    }
-    image.onerror = err => reject(err);
-  });
-}
-
 // https://stackoverflow.com/a/12300351/6472444
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
@@ -172,10 +144,50 @@ function dataURItoBlob(dataURI) {
 
 }
 
+/**
+ * compress image by canvas
+ */
+function compress(file, options) {
+  return new Promise((resolve, reject) => {
+    const { maxWidth, quality } = options;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const image = new Image();
+    try {
+      image.src = URL.createObjectURL(file);
+    } catch (e) {
+      throw Error(e);
+    }
+    image.onload = () => {
+      let w = image.naturalWidth;
+      let h = image.naturalHeight;
+      EXIF.getData(image, function() {
+        const orientation = EXIF.getTag(this, "Orientation");
+        transformCoordinate(canvas, ctx, w, h, orientation);
+        const subsampled = detectSubsampling(image);
+        if (subsampled) {
+          w /= 2;
+          h /= 2;
+        }
+        const vertSquashRatio = detectVerticalSquash(image);
+        const dw = Math.min(Number(maxWidth), w);
+        const dh = h * (dw / w) / vertSquashRatio;
+        ctx.clearRect(0, 0, w, h);
+        ctx.drawImage(image, 0, 0, dw, dh);
+        URL.revokeObjectURL(image.src);
+        const dataURL = canvas.toDataURL("image/jpeg", quality);
+        const blob = dataURItoBlob(dataURL);
+        resolve(blob);
+      });
+    }
+    image.onerror = err => reject(err);
+  });
+}
+
 export {
   detectVerticalSquash,
   detectSubsampling,
   transformCoordinate,
-  compress,
   dataURItoBlob,
+  compress,
 };

@@ -8,7 +8,7 @@
       <ul class="vux-uploader_files">
         <li class="vux-uploader_file" v-for="(item, index) in fileList" :key="index" :style="{
           backgroundImage: `url(${item})`
-        }" @click="handleFileClick(item, index)">
+        }" @click="handleFileClick($event, item, index)">
         </li>
       </ul>
       <div class="vux-uploader_input-box" v-show="files.length < limit">
@@ -22,7 +22,6 @@
   </div>
 </template>
 <script>
-import EXIF from "exif-js";
 import { compress, transformCoordinate, dataURItoBlob } from "../utils";
 
 // compatibility for window.URL
@@ -60,7 +59,7 @@ export default {
       type: String | Number,
       default: 1024
     },
-    compressQuality: {
+    quality: {
       type: String | Number,
       default: 0.92
     },
@@ -87,7 +86,7 @@ export default {
       const {
         enableCompress,
         maxWidth,
-        compressQuality,
+        quality,
         fileList,
         convertBlobToCanvas,
         uploadFile,
@@ -96,18 +95,17 @@ export default {
       const target = e.target || e.srcElement;
       const file = target.files[0];
       if (file) {
-        const canvas = await convertBlobToCanvas(file);
-        let dataURI;
+        const blobURL = URL.createObjectURL(file);
+        fileList.push(blobURL);
         if (enableCompress) {
-          compress(canvas, maxWidth).then(() => {
-            dataURI = canvas.toDataURL("image/jpeg", compressQuality);
-            autoUpload && uploadFile(dataURI);
-            fileList.push(dataURI);
-          });
+          compress(file, { maxWidth, quality })
+            .then((blob) => {
+              this.$emit('onChange', file);
+              autoUpload && uploadFile(blob);
+            });
         } else {
-          dataURI = canvas.toDataURL("image/jpeg");
-          autoUpload && uploadFile(dataURI)
-          fileList.push(dataURI);
+          autoUpload && uploadFile(file);
+          this.$emit('onChange', file);
         }
       } else {
         console.error(
@@ -132,23 +130,17 @@ export default {
         image.onload = () => {
           const dw = image.naturalWidth;
           const dh = image.naturalHeight;
-          EXIF.getData(image, function() {
-            const orientation = EXIF.getTag(this, "Orientation");
-            transformCoordinate(canvas, ctx, dw, dh, orientation);
-            ctx.clearRect(0, 0, dw, dh);
-            ctx.drawImage(image, 0, 0, dw, dh);
-            URL.revokeObjectURL(image.src);
-            resolve(canvas);
-          });
+
         };
         image.onerror = e => reject(e);
       });
     },
-    handleFileClick(item, index) {
-      this.showPreviewer();
+    handleFileClick(e, item, index) {
       const previewerImg = document.getElementById("previewerImg");
       previewerImg.style.backgroundImage = `url(${item})`;
       this.currentIndex = index;
+      this.showPreviewer();
+      this.$emit('onPreview', e, index);
     },
     showPreviewer() {
       const previewer = document.getElementById("previewer");
@@ -168,12 +160,12 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
+      this.$emit('onDelete', currentIndex);
     },
-    uploadFile(dataURI) {
+    uploadFile(blob) {
       return new Promise((resolve, reject) => {
-        const { url, fileList } = this;
+        const { url } = this;
         const formData = new FormData();
-        const blob = dataURItoBlob(dataURI);
         const xhr = new XMLHttpRequest();
         formData.append("file", blob);
         xhr.open("POST", url);
@@ -185,7 +177,7 @@ export default {
               this.$emit("onSuccess", result);
               resolve();
             } else {
-              throw Error("XMLHttpRequest response status is " + xhr.status);
+              this.$emit("onError", xhr);
             }
           }
         };
