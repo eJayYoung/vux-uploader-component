@@ -113,28 +113,6 @@ export default {
         );
       }
     },
-    /**
-     * [params] File / Blob
-     * [return] Canvas
-     */
-    convertBlobToCanvas(file) {
-      return new Promise((resolve, reject) => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const image = new Image();
-        try {
-          image.src = URL.createObjectURL(file);
-        } catch (e) {
-          throw Error(e);
-        }
-        image.onload = () => {
-          const dw = image.naturalWidth;
-          const dh = image.naturalHeight;
-
-        };
-        image.onerror = e => reject(e);
-      });
-    },
     handleFileClick(e, item, index) {
       const previewerImg = document.getElementById("previewerImg");
       previewerImg.style.backgroundImage = `url(${item})`;
