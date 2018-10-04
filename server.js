@@ -19,7 +19,6 @@ app.use(allowCrossDomain);
 
 app.post('/upload', upload.array('file', 5), function(req, res) {
   if (req.files.length > 0) {
-    console.log(req.files[0]);
     res.send({
       data: 'success',
       code: 200,

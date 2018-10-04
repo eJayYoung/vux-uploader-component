@@ -22,6 +22,7 @@ npm install -S vux-uploader-component
 - [x] previewer for picture
 - [x] delete for previewer
 - [x] support remote ajax post to upload
+- [x] support progress bar base on xhr.upload.onprogress
 
 ## Development
 

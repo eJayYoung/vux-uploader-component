@@ -6,9 +6,14 @@
     </div>
     <div class="vux-uploader_bd">
       <ul class="vux-uploader_files">
-        <li class="vux-uploader_file" v-for="(item, index) in fileList" :key="index" :style="{
-          backgroundImage: `url(${item})`
+        <li :class="{'vux-uploader_file': true, 'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success' }" v-for="(item, index) in fileList" :key="index" :style="{
+          backgroundImage: `url(${item.url})`
         }" @click="handleFileClick($event, item, index)">
+          <div v-if="!!item.fetchStatus && item.fetchStatus !== 'success'" class="vux-uploader_file-content">
+            {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
+            <!-- progress !== 0 && progress < 100 -->
+            <i v-if="item.fetchStatus === 'fail'" class="upload-error"></i>
+          </div>
         </li>
       </ul>
       <div class="vux-uploader_input-box" v-show="files.length < limit">
@@ -74,11 +79,16 @@ export default {
   data() {
     return {
       fileList: [],
-      currentIndex: 0
+      currentIndex: 0,
     };
   },
   mounted() {
-    this.fileList = this.fileList.concat(this.files);
+    const cookedFile = this.files.map(n => {
+      return {
+        'url': n,
+      }
+    });
+    this.fileList = this.fileList.concat(cookedFile);
     this.hidePreviewer();
   },
   methods: {
@@ -88,24 +98,25 @@ export default {
         maxWidth,
         quality,
         fileList,
-        convertBlobToCanvas,
-        uploadFile,
-        autoUpload
+        autoUpload,
+        uploadFile
       } = this;
       const target = e.target || e.srcElement;
       const file = target.files[0];
       if (file) {
         const blobURL = URL.createObjectURL(file);
-        fileList.push(blobURL);
+        const fileItem = {
+          'url': blobURL
+        };
+        fileList.push(fileItem);
         if (enableCompress) {
-          compress(file, { maxWidth, quality })
-            .then((blob) => {
-              this.$emit('onChange', file);
-              autoUpload && uploadFile(blob);
-            });
+          compress(file, { maxWidth, quality }).then(blob => {
+            this.$emit("onChange", file);
+            autoUpload && uploadFile(blob, fileItem);
+          });
         } else {
-          autoUpload && uploadFile(file);
-          this.$emit('onChange', file);
+          autoUpload && uploadFile(file, fileItem);
+          this.$emit("onChange", file);
         }
       } else {
         console.error(
@@ -115,10 +126,10 @@ export default {
     },
     handleFileClick(e, item, index) {
       const previewerImg = document.getElementById("previewerImg");
-      previewerImg.style.backgroundImage = `url(${item})`;
+      previewerImg.style.backgroundImage = `url(${item.url})`;
       this.currentIndex = index;
       this.showPreviewer();
-      this.$emit('onPreview', e, index);
+      this.$emit("onPreview", e, index);
     },
     showPreviewer() {
       const previewer = document.getElementById("previewer");
@@ -138,27 +149,39 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
-      this.$emit('onDelete', currentIndex);
+      this.$emit("onDelete", currentIndex);
     },
-    uploadFile(blob) {
+    uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {
-        const { url } = this;
+        const me = this;
+        const { url } = me;
+        me.$set(fileItem, 'fetchStatus', 'progress');
+        me.$set(fileItem, 'progress', 0);
         const formData = new FormData();
         const xhr = new XMLHttpRequest();
         formData.append("file", blob);
-        xhr.open("POST", url);
-        xhr.send(formData);
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
               const result = JSON.parse(xhr.responseText);
-              this.$emit("onSuccess", result);
+              me.$emit("onSuccess", result);
+              me.$set(fileItem, 'fetchStatus', 'success');
               resolve();
             } else {
-              this.$emit("onError", xhr);
+              me.$emit("onError", xhr);
+              me.$set(fileItem, 'fetchStatus', 'fail');
             }
           }
         };
+        xhr.upload.addEventListener('progress', function (evt) {
+          if (evt.lengthComputable) {
+            const precent = Math.ceil(evt.loaded / evt.total) * 100;
+            console.log('进度百分比', precent);
+            me.$set(fileItem, 'progress', precent);
+          }
+        }, false);
+        xhr.open("POST", url, true);
+        xhr.send(formData);
       });
     }
   }
@@ -197,6 +220,36 @@ export default {
         height: 79px;
         background: no-repeat center center;
         background-size: cover;
+      }
+      .vux-uploader_file-status {
+        position: relative;
+        &:before {
+          content: "";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, .4);
+        }
+      }
+      .vux-uploader_file-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        color: #fff;
+        .upload-error {
+          display: inline-block;
+          font-size: 23px;
+          color: #f43530;
+          font-family: "weui";
+          font-style: normal;
+          &:before {
+            content: "\EA0B";
+          }
+        }
       }
     }
     .vux-uploader_input-box {
