@@ -1,4 +1,5 @@
 # vux-uploader-component
+![](https://www.travis-ci.org/eJayYoung/vux-uploader-component.svg?branch=master)
 
 a mobile vue component implementation for [weui](https://weui.io/weui.js/) uploader
 
