@@ -3,10 +3,12 @@ module.exports = {
   env: {
     browser: true,
     amd: true,
-    node: true
+    node: true,
+    mocha: true,
   },
   plugins: ["html"],
   rules: {
-    "no-console": 0
+    "no-console": 0,
+    "no-extra-boolean-cast": 0,
   }
 };

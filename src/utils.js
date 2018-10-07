@@ -163,7 +163,7 @@ function compress(file, options) {
       let h = image.naturalHeight;
       EXIF.getData(image, function() {
         const orientation = EXIF.getTag(this, "Orientation");
-        transformCoordinate(canvas, ctx, w, h, orientation);
+        if (!!orientation) transformCoordinate(canvas, ctx, w, h, orientation);
         const subsampled = detectSubsampling(image);
         if (subsampled) {
           w /= 2;
