@@ -3,10 +3,9 @@ import { mount } from '@vue/test-utils'
 import Uploader from '../src/components/uploader';
 
 describe('vux-uploader-component', () => {
-  it('render a input select file', () => {
+  it('include a type=file input', () => {
     const uploader = mount(Uploader);
-    console.log(uploader);
-    expect(uploader.contains('input:file')).toBe(true);
+    expect(uploader.contains('input[type="file"]')).to.be.true;
   })
 });
 

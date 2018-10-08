@@ -2,11 +2,13 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './demo/main.js',
+  entry: {
+    'build': './demo/main.js'
+  },
   output: {
     path: path.resolve(__dirname, './demo'),
     publicPath: '/demo/',
-    filename: 'build.js'
+    filename: '[name].js'
   },
   module: {
     rules: [

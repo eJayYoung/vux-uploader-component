@@ -46,7 +46,7 @@ export default {
     },
     files: {
       type: Array,
-      default: []
+      default: () => [],
     },
     limit: {
       type: Number | String,
