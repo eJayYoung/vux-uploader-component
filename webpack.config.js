@@ -2,11 +2,13 @@ var path = require('path')
 var webpack = require('webpack')
 
 module.exports = {
-  entry: './example/main.js',
+  entry: {
+    'build': './demo/main.js'
+  },
   output: {
-    path: path.resolve(__dirname, './example'),
-    publicPath: '/example/',
-    filename: 'build.js'
+    path: path.resolve(__dirname, './demo'),
+    publicPath: '/demo/',
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -54,9 +56,6 @@ module.exports = {
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
-  externals: {
-    'vue': 'Vue',
-  },
   devServer: {
     historyApiFallback: true,
     noInfo: true,
@@ -64,36 +63,53 @@ module.exports = {
     host: '0.0.0.0',
     disableHostCheck: true,
   },
-  performance: {
-    hints: false
-  },
   devtool: '#eval-source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(`${process.env.NODE_ENV}`)
+        NODE_ENV: '"development"'
       }
     }),
   ],
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.entry = './src/index.js';
+  module.exports.devtool = '#source-map';
+
+  module.exports.entry = {
+    'uploader': './src/index.js',
+  };
   module.exports.output = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build.js'
-  },
-  module.exports.devtool = '#source-map'
+    filename: '[name].js',
+    library: 'vux-uploader-component',
+    libraryTarget: 'umd',
+  };
+
+  module.exports.resolve = {
+    alias: {
+      'vue$': 'vue/dist/vue.esm.js'
+    },
+    extensions: ['*', '.js', '.vue', '.json']
+  };
+
+  module.exports.externals = {
+    'vue': 'Vue',
+  };
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"production"'
       }
     }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   sourceMap: true,
+    //   compress: {
+    //     warnings: false
+    //   }
+    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
