@@ -21,8 +21,8 @@
 </template>
 
 <script>
-// import Uploader from '../src/index';
-import Uploader from '../dist/uploader.js';
+import Uploader from '../src/index';
+// import Uploader from '../dist/uploader.js';
 // const Uploader = require('../dist/uploader.js');
 console.log(Uploader);
 
