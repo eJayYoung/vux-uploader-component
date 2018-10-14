@@ -16,7 +16,7 @@
           </div>
         </li>
       </ul>
-      <div class="vux-uploader_input-box" v-show="files.length < limit">
+      <div class="vux-uploader_input-box" v-show="fileList.length < limit">
         <input class="vux-uploader_input" ref="input" type="file" accept="image/*" :capture="capture" @change="change"/>
       </div>
     </div>
@@ -74,7 +74,7 @@ export default {
     autoUpload: {
       type: Boolean,
       default: true
-    }
+    },
   },
   data() {
     return {
@@ -99,7 +99,7 @@ export default {
         quality,
         fileList,
         autoUpload,
-        uploadFile
+        uploadFile,
       } = this;
       const target = e.target || e.srcElement;
       const file = target.files[0];
