@@ -15,6 +15,45 @@ npm install -S vux-uploader-component
 [https://ejayyoung.github.io/vux-uploader-component/index.html](https://ejayyoung.github.io/vux-uploader-component/index.html)
 > scan the qrcode and have a test in your device
 
+## Usage
+```html
+<template>
+  <uploader
+    :files=[]
+    url="your remote upload url"
+    @onChange="onChange"
+    @onPreview="onPreview"
+    @onDelete="onDelete"
+    @onSuccess="onSuccess"
+    @onError="onError"
+  >
+  </uploader>
+</template>
+<script>
+  import Uploader from 'vux-uploader-component'
+
+  export default {
+    components: {
+      Uploader,
+    },
+  }
+</script>
+```
+
+## Props
+
+property | type | default | description
+---------| ---- | ------- | -----------
+title | String | '图片上传' | 组件标题
+files | Array | [] | 图片文件列表
+limit | Number \| String | 5 | 限制上传图片个数
+capture | Number \| String | false | 是否只选择调用相机
+enableCompress | Boolean | true | 是否压缩
+maxWidth | String \| Number | 1024 | 图片压缩最大宽度
+quality | String \| Number | 0.92 | 图片压缩率
+url | String | - | 上传服务器url
+autoUpload | Boolean | true | 是否自动开启上传
+
 ## Todo
 - [x] use HTML Media Capture to invoke mobile camera
 - [x] use URL.createObjectURL generate the blob url for picture
