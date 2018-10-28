@@ -22,6 +22,7 @@ npm install -S vux-uploader-component
     :files=[]
     url="your remote upload url"
     @onChange="onChange"
+    @onCancel="onCancel"
     @onPreview="onPreview"
     @onDelete="onDelete"
     @onSuccess="onSuccess"
@@ -55,14 +56,13 @@ url | String | - | 上传服务器url
 autoUpload | Boolean | true | 是否自动开启上传
 
 ## Todo
-- [x] use HTML Media Capture to invoke mobile camera
-- [x] use URL.createObjectURL generate the blob url for picture
-- [x] in ios safari, according orientation auto rotate image
-- [x] use canvas.toDataUrl get the compress base64 url
-- [x] previewer for picture
-- [x] delete for previewer
-- [x] support remote ajax post to upload
-- [x] support progress bar base on xhr.upload.onprogress
+- [x] 调用手机相机
+- [x] 获取图片并渲染到浏览器
+- [x] 解决图片EXIF旋转
+- [x] 预览图片
+- [x] 删除图片
+- [x] 支持上传图片配置
+- [x] 显示上传进度
 
 ## Development
 
