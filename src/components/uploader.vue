@@ -17,7 +17,7 @@
         </li>
       </ul>
       <div class="vux-uploader_input-box" v-show="fileList.length < limit">
-        <input class="vux-uploader_input" ref="input" type="file" accept="image/*" :capture="capture" @change="change"/>
+        <input class="vux-uploader_input" ref="input" type="file" name="uploadInput" accept="image/*" :capture="capture" @change="change"/>
       </div>
     </div>
     <div class="vux-uploader_previewer" id="previewer" @click="hidePreviewer">
@@ -27,7 +27,7 @@
   </div>
 </template>
 <script>
-import { compress, transformCoordinate, dataURItoBlob } from "../utils";
+import { handleFile, transformCoordinate, dataURItoBlob } from "../utils";
 
 // compatibility for window.URL
 const URL =
@@ -46,7 +46,7 @@ export default {
     },
     files: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     limit: {
       type: Number | String,
@@ -74,19 +74,19 @@ export default {
     autoUpload: {
       type: Boolean,
       default: true
-    },
+    }
   },
   data() {
     return {
       fileList: [],
-      currentIndex: 0,
+      currentIndex: 0
     };
   },
   mounted() {
     const cookedFile = this.files.map(n => {
       return {
-        'url': n,
-      }
+        url: n
+      };
     });
     this.fileList = this.fileList.concat(cookedFile);
     this.hidePreviewer();
@@ -99,29 +99,29 @@ export default {
         quality,
         fileList,
         autoUpload,
-        uploadFile,
+        uploadFile
       } = this;
       const target = e.target || e.srcElement;
       const file = target.files[0];
       if (file) {
-        const blobURL = URL.createObjectURL(file);
-        const fileItem = {
-          'url': blobURL
-        };
-        fileList.push(fileItem);
-        if (enableCompress) {
-          compress(file, { maxWidth, quality }).then(blob => {
-            this.$emit("onChange", file);
-            autoUpload && uploadFile(blob, fileItem);
-          });
-        } else {
-          autoUpload && uploadFile(file, fileItem);
+        handleFile(file, {
+          maxWidth,
+          quality,
+          enableCompress,
+        }).then(blob => {
+          const blobURL = URL.createObjectURL(blob);
+          const fileItem = {
+            url: blobURL,
+          };
+          fileList.push(fileItem);
           this.$emit("onChange", file);
-        }
+          autoUpload && uploadFile(blob, fileItem);
+        })
       } else {
         console.error(
-          "you did cancel action, so that there is no file change, please confirm to choose a picture"
+          "you did cancel action, please confirm to choose a picture"
         );
+        this.$emit('onCancel');
       }
     },
     handleFileClick(e, item, index) {
@@ -155,8 +155,8 @@ export default {
       return new Promise((resolve, reject) => {
         const me = this;
         const { url } = me;
-        me.$set(fileItem, 'fetchStatus', 'progress');
-        me.$set(fileItem, 'progress', 0);
+        me.$set(fileItem, "fetchStatus", "progress");
+        me.$set(fileItem, "progress", 0);
         const formData = new FormData();
         const xhr = new XMLHttpRequest();
         formData.append("file", blob);
@@ -165,21 +165,24 @@ export default {
             if (xhr.status === 200) {
               const result = JSON.parse(xhr.responseText);
               me.$emit("onSuccess", result);
-              me.$set(fileItem, 'fetchStatus', 'success');
+              me.$set(fileItem, "fetchStatus", "success");
               resolve();
             } else {
               me.$emit("onError", xhr);
-              me.$set(fileItem, 'fetchStatus', 'fail');
+              me.$set(fileItem, "fetchStatus", "fail");
             }
           }
         };
-        xhr.upload.addEventListener('progress', function (evt) {
-          if (evt.lengthComputable) {
-            const precent = Math.ceil(evt.loaded / evt.total) * 100;
-            console.log('进度百分比', precent);
-            me.$set(fileItem, 'progress', precent);
-          }
-        }, false);
+        xhr.upload.addEventListener(
+          "progress",
+          function(evt) {
+            if (evt.lengthComputable) {
+              const precent = Math.ceil(evt.loaded / evt.total) * 100;
+              me.$set(fileItem, "progress", precent);
+            }
+          },
+          false
+        );
         xhr.open("POST", url, true);
         xhr.send(formData);
       });
@@ -230,15 +233,15 @@ export default {
           bottom: 0;
           left: 0;
           right: 0;
-          background: rgba(0, 0, 0, .4);
+          background: rgba(0, 0, 0, 0.4);
         }
       }
       .vux-uploader_file-content {
         position: absolute;
         top: 50%;
         left: 50%;
-        -webkit-transform: translate(-50%,-50%);
-        transform: translate(-50%,-50%);
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
         color: #fff;
         .upload-error {
           display: inline-block;

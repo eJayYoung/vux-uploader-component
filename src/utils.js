@@ -64,17 +64,9 @@ function detectSubsampling(img) {
  * Orientation value is from EXIF tag
  */
 function transformCoordinate(canvas, ctx, width, height, orientation) {
-  switch (orientation) {
-    case 5:
-    case 6:
-    case 7:
-    case 8:
-      canvas.width = height;
-      canvas.height = width;
-      break;
-    default:
-      canvas.width = width;
-      canvas.height = height;
+  if (orientation > 4) {
+    canvas.width = height;
+    canvas.height = width;
   }
   switch (orientation) {
     case 2:
@@ -145,11 +137,11 @@ function dataURItoBlob(dataURI) {
 }
 
 /**
- * compress image by canvas
+ * convert blob to canvas to blob
  */
-function compress(file, options) {
+function handleFile(file, options) {
   return new Promise((resolve, reject) => {
-    const { maxWidth, quality } = options;
+    const { maxWidth, quality, enableCompress } = options;
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     const image = new Image();
@@ -163,21 +155,26 @@ function compress(file, options) {
       let h = image.naturalHeight;
       EXIF.getData(image, function() {
         const orientation = EXIF.getTag(this, "Orientation");
-        if (!!orientation) transformCoordinate(canvas, ctx, w, h, orientation);
         const subsampled = detectSubsampling(image);
         if (subsampled) {
           w /= 2;
           h /= 2;
         }
         const vertSquashRatio = detectVerticalSquash(image);
-        const dw = Math.min(Number(maxWidth), w);
+        const dw = enableCompress ? Math.min(Number(maxWidth), w) : w;
         const dh = h * (dw / w) / vertSquashRatio;
-        ctx.clearRect(0, 0, w, h);
+        if (orientation)  {
+          transformCoordinate(canvas, ctx, dw, dh, orientation);
+        } else {
+          canvas.width = dw;
+          canvas.height = dh;
+        }
+        ctx.clearRect(0, 0, dw, dh);
         ctx.drawImage(image, 0, 0, dw, dh);
         URL.revokeObjectURL(image.src);
-        const dataURL = canvas.toDataURL("image/jpeg", quality);
-        const blob = dataURItoBlob(dataURL);
-        resolve(blob);
+        canvas.toBlob(blob => {
+          resolve(blob);
+        }, "image/jpeg", quality);
       });
     }
     image.onerror = err => reject(err);
@@ -189,5 +186,5 @@ export {
   detectSubsampling,
   transformCoordinate,
   dataURItoBlob,
-  compress,
+  handleFile,
 };

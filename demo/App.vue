@@ -11,6 +11,7 @@
         ]"
         url="http://localhost:9090/upload"
         @onChange="onChange"
+        @onCancel="onCancel"
         @onPreview="onPreview"
         @onDelete="onDelete"
         @onSuccess="onSuccess"
@@ -34,6 +35,9 @@ export default {
   methods: {
     onChange(file) {
       console.log('onChange: ', file);
+    },
+    onCancel() {
+      console.log('onCancel: Sucess');
     },
     onPreview(e, idx) {
       console.log('onPreview: ', e, idx);
