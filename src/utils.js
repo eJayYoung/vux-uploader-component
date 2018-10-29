@@ -64,9 +64,17 @@ function detectSubsampling(img) {
  * Orientation value is from EXIF tag
  */
 function transformCoordinate(canvas, ctx, width, height, orientation) {
-  if (orientation > 4) {
-    canvas.width = height;
-    canvas.height = width;
+  switch (orientation) {
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+      canvas.width = height;
+      canvas.height = width;
+      break;
+    default:
+      canvas.width = width;
+      canvas.height = height;
   }
   switch (orientation) {
     case 2:
@@ -163,12 +171,7 @@ function handleFile(file, options) {
         const vertSquashRatio = detectVerticalSquash(image);
         const dw = enableCompress ? Math.min(Number(maxWidth), w) : w;
         const dh = h * (dw / w) / vertSquashRatio;
-        if (orientation)  {
-          transformCoordinate(canvas, ctx, dw, dh, orientation);
-        } else {
-          canvas.width = dw;
-          canvas.height = dh;
-        }
+        transformCoordinate(canvas, ctx, dw, dh, orientation);
         ctx.clearRect(0, 0, dw, dh);
         ctx.drawImage(image, 0, 0, dw, dh);
         URL.revokeObjectURL(image.src);
