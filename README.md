@@ -64,6 +64,7 @@ multiple | String \| Boolean | "" | 是否支持多选, `false`为不支持
 - [x] 删除图片
 - [x] 支持上传图片配置
 - [x] 显示上传进度
+- [x] 支持多选
 
 ## Development
 
