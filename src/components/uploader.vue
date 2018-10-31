@@ -17,7 +17,7 @@
         </li>
       </ul>
       <div class="vux-uploader_input-box" v-show="fileList.length < limit">
-        <input class="vux-uploader_input" ref="input" type="file" name="uploadInput" accept="image/*" :capture="capture" @change="change"/>
+        <input class="vux-uploader_input" ref="input" type="file" name="uploadInput" accept="image/*" :capture="capture" :multiple="multiple" @change="change"/>
       </div>
     </div>
     <div class="vux-uploader_previewer" id="previewer" @click="hidePreviewer">
@@ -74,7 +74,11 @@ export default {
     autoUpload: {
       type: Boolean,
       default: true
-    }
+    },
+    multiple: {
+      type: String | Boolean,
+      default: "",
+    },
   },
   data() {
     return {
@@ -102,21 +106,23 @@ export default {
         uploadFile
       } = this;
       const target = e.target || e.srcElement;
-      const file = target.files[0];
-      if (file) {
-        handleFile(file, {
-          maxWidth,
-          quality,
-          enableCompress,
-        }).then(blob => {
-          const blobURL = URL.createObjectURL(blob);
-          const fileItem = {
-            url: blobURL,
-          };
-          fileList.push(fileItem);
-          this.$emit("onChange", file);
-          autoUpload && uploadFile(blob, fileItem);
-        })
+      const files = target.files;
+      if (files.length > 0) {
+        Array.prototype.forEach.call(files, file => {
+          handleFile(file, {
+            maxWidth,
+            quality,
+            enableCompress,
+          }).then(blob => {
+            const blobURL = URL.createObjectURL(blob);
+            const fileItem = {
+              url: blobURL,
+            };
+            fileList.push(fileItem);
+            this.$emit("onChange", file);
+            autoUpload && uploadFile(blob, fileItem);
+          })
+        });
       } else {
         console.error(
           "you did cancel action, please confirm to choose a picture"

@@ -54,6 +54,7 @@ maxWidth | String \| Number | 1024 | 图片压缩最大宽度
 quality | String \| Number | 0.92 | 图片压缩率
 url | String | - | 上传服务器url
 autoUpload | Boolean | true | 是否自动开启上传
+multiple | String \| Boolean | "" | 是否支持多选, `false`为不支持
 
 ## Todo
 - [x] 调用手机相机
