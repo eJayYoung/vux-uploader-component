@@ -23,8 +23,6 @@ npm install -S vux-uploader-component
     url="your remote upload url"
     @onChange="onChange"
     @onCancel="onCancel"
-    @onPreview="onPreview"
-    @onDelete="onDelete"
     @onSuccess="onSuccess"
     @onError="onError"
   >
@@ -55,6 +53,14 @@ quality | String \| Number | 0.92 | 图片压缩率
 url | String | - | 上传服务器url
 autoUpload | Boolean | true | 是否自动开启上传
 multiple | String \| Boolean | "" | 是否支持多选, `false`为不支持
+
+## Events
+event | param | description
+------| ----- | -----------
+`onChange` | `(fileList)` | 选完照片后确定的回调，返回`FileList`
+`onCancel` | `()` | 选择照片后取消的回调，用于误错误提示
+`onSuccess` | `(result)` | 上传请求成功后的回调，返回远程请求的返回结果
+`onError` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
 
 ## Todo
 - [x] 调用手机相机

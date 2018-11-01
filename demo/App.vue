@@ -12,8 +12,6 @@
         url="http://localhost:9090/upload"
         @onChange="onChange"
         @onCancel="onCancel"
-        @onPreview="onPreview"
-        @onDelete="onDelete"
         @onSuccess="onSuccess"
         @onError="onError"
       />
@@ -25,7 +23,6 @@
 import Uploader from '../src/index';
 // import Uploader from '../dist/uploader.js';
 // const Uploader = require('../dist/uploader.js');
-console.log(Uploader);
 
 export default {
   name: 'app',
@@ -33,17 +30,11 @@ export default {
     Uploader,
   },
   methods: {
-    onChange(file) {
-      console.log('onChange: ', file);
+    onChange(fileList) {
+      console.log('onChange: ', fileList);
     },
     onCancel() {
       console.log('onCancel: Sucess');
-    },
-    onPreview(e, idx) {
-      console.log('onPreview: ', e, idx);
-    },
-    onDelete(idx) {
-      console.log('onDelete: ', idx);
     },
     onSuccess(res) {
       console.log('onSuccess: ', res);

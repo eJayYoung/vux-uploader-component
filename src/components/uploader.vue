@@ -108,6 +108,7 @@ export default {
       const target = e.target || e.srcElement;
       const files = target.files;
       if (files.length > 0) {
+        this.$emit("onChange", files);
         Array.prototype.forEach.call(files, file => {
           handleFile(file, {
             maxWidth,
@@ -119,14 +120,10 @@ export default {
               url: blobURL,
             };
             fileList.push(fileItem);
-            this.$emit("onChange", file);
             autoUpload && uploadFile(blob, fileItem);
           })
         });
       } else {
-        console.error(
-          "you did cancel action, please confirm to choose a picture"
-        );
         this.$emit('onCancel');
       }
     },
@@ -135,7 +132,6 @@ export default {
       previewerImg.style.backgroundImage = `url(${item.url})`;
       this.currentIndex = index;
       this.showPreviewer();
-      this.$emit("onPreview", e, index);
     },
     showPreviewer() {
       const previewer = document.getElementById("previewer");
@@ -155,7 +151,6 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
-      this.$emit("onDelete", currentIndex);
     },
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {
