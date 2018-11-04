@@ -6,9 +6,17 @@
     </div>
     <div class="vux-uploader_bd">
       <ul class="vux-uploader_files">
-        <li :class="{'vux-uploader_file': true, 'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success' }" v-for="(item, index) in fileList" :key="index" :style="{
-          backgroundImage: `url(${item.url})`
-        }" @click="handleFileClick($event, item, index)">
+        <li :class="{
+              'vux-uploader_file': true,
+              'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success'
+            }"
+            v-for="(item, index) in fileList"
+            :key="index"
+            :style="{
+              backgroundImage: `url(${item.url})`
+            }"
+            @click="handleFileClick($event, item, index)"
+        >
           <div v-if="!!item.fetchStatus && item.fetchStatus !== 'success'" class="vux-uploader_file-content">
             {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
             <!-- progress !== 0 && progress < 100 -->
