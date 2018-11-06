@@ -58,7 +58,7 @@ multiple | String \| Boolean | "" | 是否支持多选, `false`为不支持
 event | param | description
 ------| ----- | -----------
 `onChange` | `(fileList)` | 选完照片后确定的回调，返回`FileList`
-`onCancel` | `()` | 选择照片后取消的回调，用于误错误提示
+`onCancel` | `()` | 选择照片后取消的回调，用于错误提示
 `onSuccess` | `(result)` | 上传请求成功后的回调，返回远程请求的返回结果
 `onError` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
 
