@@ -18,7 +18,7 @@ describe('vux-uploader-component', () => {
       });
     });
     describe('files', () => {
-      const wrapper = mount(Uploader, {
+      const uploader = mount(Uploader, {
         propsData: {
           files: [
             './assets/pic_160.png',
@@ -26,11 +26,11 @@ describe('vux-uploader-component', () => {
         }
       });
       it('length should be 1', () => {
-        expect(wrapper.findAll('.vux-uploader_file').length).to.equal(1);
+        expect(uploader.findAll('.vux-uploader_file').length).to.equal(1);
       });
     });
     describe('limit', () => {
-      const wrapper = mount(Uploader, {
+      const uploader = mount(Uploader, {
         propsData: {
           files: [
             './assets/pic_160.png',
@@ -43,17 +43,39 @@ describe('vux-uploader-component', () => {
         }
       });
       it('input is unVisible', () => {
-        expect(wrapper.find('.vux-uploader_input-box').isVisible()).to.be.false;
+        expect(uploader.find('.vux-uploader_input-box').isVisible()).to.be.false;
+      });
+    });
+    describe('capture', () => {
+      it('input don\'t has capture attribute', () => {
+        const uploader = mount(Uploader);
+        expect(uploader.find({ ref: 'input' }).attributes('capture')).to.be.undefined;
+      });
+      it('input has capture attribute', () => {
+        const uploader = mount(Uploader, {
+          propsData: {
+            capture: true,
+          }
+        });
+        expect(uploader.find({ ref: 'input' }).attributes('capture')).to.be.string('true');
       });
     });
   });
   describe('Handle File', () => {
+    it('click add image', () => {
+      // const uploader = mount(Uploader);
+      // const input = uploader.find({ ref: 'input' });
+      // const file = new File(['test'], 'test.png');
+      // input.element.files = [file];
+      // input.trigger('change');
+    });
     it('convert file to blob', () => {
+      
       const file = new File(['test'], 'test.png');
       handleFile(file)
         .then(blob => {
           expect(blob).to.be.an.instanceof(Blob);
-        })
+        });
     });
   });
 });
