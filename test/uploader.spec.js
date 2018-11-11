@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
 import Uploader from '../src/components/uploader';
 import { handleFile } from '../src/utils';
+import { doesNotReject } from 'assert';
 
 describe('vux-uploader-component', () => {
   describe('input', () => {
@@ -62,20 +63,38 @@ describe('vux-uploader-component', () => {
     });
   });
   describe('Handle File', () => {
-    it('click add image', () => {
-      // const uploader = mount(Uploader);
-      // const input = uploader.find({ ref: 'input' });
-      // const file = new File(['test'], 'test.png');
-      // input.element.files = [file];
-      // input.trigger('change');
-    });
     it('convert file to blob', () => {
-      
-      const file = new File(['test'], 'test.png');
+      const file = new File([9527], 'test.png');
       handleFile(file)
         .then(blob => {
           expect(blob).to.be.an.instanceof(Blob);
         });
+    });
+  });
+  describe('Picture Action', () => {
+    describe('Preview', () => {
+      it('default hide', () => {
+        const uploader = mount(Uploader);
+        const previewer = uploader.find('#previewer');
+        expect(previewer.isVisible()).to.be.false;
+      });
+      it('click to show', (done) => {
+        const uploader = mount(Uploader, {
+          propsData: {
+            files: [
+              './assets/pic_160.png',
+            ],
+          },
+        });
+        // uploader.vm.$nextTick(() => {
+        //   const currentFile = uploader.find('.vux-uploader_file');
+        //   const previewer = uploader.find('#previewer');
+        //   console.log(currentFile);
+        //   currentFile.trigger('click');
+        //   // expect(previewer.isVisible()).to.be.true;
+        //   done();
+        // });
+      });
     });
   });
 });
