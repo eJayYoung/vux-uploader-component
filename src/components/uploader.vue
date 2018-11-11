@@ -28,7 +28,7 @@
         <input class="vux-uploader_input" ref="input" type="file" name="uploadInput" accept="image/*" :capture="capture" :multiple="multiple" @change="change"/>
       </div>
     </div>
-    <div class="vux-uploader_previewer" id="previewer" @click="hidePreviewer">
+    <div class="vux-uploader_previewer" id="previewer" v-show="previewVisible" @click="hidePreviewer">
       <div class="vux-uploader_preview-img" id="previewerImg"></div>
       <div class="vux-uploader_del" @click="deleteImg"></div>
     </div>
@@ -91,7 +91,8 @@ export default {
   data() {
     return {
       fileList: [],
-      currentIndex: 0
+      currentIndex: 0,
+      previewVisible: false,
     };
   },
   mounted() {
@@ -101,7 +102,6 @@ export default {
       };
     });
     this.fileList = this.fileList.concat(cookedFile);
-    this.hidePreviewer();
   },
   methods: {
     async change(e) {
@@ -142,18 +142,10 @@ export default {
       this.showPreviewer();
     },
     showPreviewer() {
-      const previewer = document.getElementById("previewer");
-      if (previewer) {
-        previewer.style.display = "block";
-        previewer.style.opacity = 1;
-      }
+      this.previewVisible = true;
     },
     hidePreviewer() {
-      const previewer = document.getElementById("previewer");
-      if (previewer) {
-        previewer.style.display = "none";
-        previewer.style.opacity = 0;
-      }
+      this.previewVisible = false;
     },
     deleteImg() {
       const { currentIndex, fileList } = this;
