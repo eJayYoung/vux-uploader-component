@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
 import Uploader from '../src/components/uploader';
 import { handleFile } from '../src/utils';
-import { doesNotReject } from 'assert';
 
 describe('vux-uploader-component', () => {
   describe('input', () => {
@@ -78,7 +77,7 @@ describe('vux-uploader-component', () => {
         const previewer = uploader.find('#previewer');
         expect(previewer.isVisible()).to.be.false;
       });
-      it('click to show', (done) => {
+      it('click to show', () => {
         const uploader = mount(Uploader, {
           propsData: {
             files: [
@@ -86,14 +85,46 @@ describe('vux-uploader-component', () => {
             ],
           },
         });
-        // uploader.vm.$nextTick(() => {
-        //   const currentFile = uploader.find('.vux-uploader_file');
-        //   const previewer = uploader.find('#previewer');
-        //   console.log(currentFile);
-        //   currentFile.trigger('click');
-        //   // expect(previewer.isVisible()).to.be.true;
-        //   done();
-        // });
+        uploader.vm.$nextTick(() => {
+          const currentFile = uploader.find('.vux-uploader_file');
+          currentFile.trigger('click');
+          const previewer = uploader.find('#previewer');
+          expect(previewer.isVisible()).to.be.true;
+        });
+      });
+      it('click to hide', () => {
+        const uploader = mount(Uploader, {
+          propsData: {
+            files: [
+              './assets/pic_160.png',
+            ],
+          },
+        });
+        uploader.vm.$nextTick(() => {
+          const currentFile = uploader.find('.vux-uploader_file');
+          currentFile.trigger('click');
+          const previewer = uploader.find('#previewer');
+          previewer.trigger('click');
+          expect(previewer.isVisible()).to.be.false;
+        });
+      });
+    });
+    describe('Delete', () => {
+      it('click to delete', () => {
+        const uploader = mount(Uploader, {
+          propsData: {
+            files: [
+              './assets/pic_160.png',
+            ],
+          },
+        });
+        uploader.vm.$nextTick(() => {
+          const currentFile = uploader.find('.vux-uploader_file');
+          currentFile.trigger('click');
+          const deleteBtn = uploader.find('.vux-uploader_del');
+          deleteBtn.trigger('click');
+          expect(uploader.vm.$data.fileList.length).to.equal(0);
+        });
       });
     });
   });
