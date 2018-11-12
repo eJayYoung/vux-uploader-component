@@ -95,7 +95,7 @@ export default {
       previewVisible: false,
     };
   },
-  mounted() {
+  created() {
     const cookedFile = this.files.map(n => {
       return {
         url: n
