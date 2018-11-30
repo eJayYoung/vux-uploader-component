@@ -178,7 +178,7 @@ export default {
           "progress",
           function(evt) {
             if (evt.lengthComputable) {
-              const precent = Math.ceil(evt.loaded / evt.total) * 100;
+              const precent = Math.ceil((evt.loaded / evt.total) * 100);
               me.$set(fileItem, "progress", precent);
             }
           },
