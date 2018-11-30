@@ -1,3 +1,13 @@
+<a name="1.0.2"></a>
+## [1.0.2](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.1...v1.0.2) (2018-11-30)
+
+
+### Bug Fixes
+
+* onprogress precent calculate ([b9ac5e9](https://github.com/eJayYoung/vux-uploader-component/commit/b9ac5e9))
+
+
+
 <a name="1.0.1"></a>
 ## [1.0.1](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.0...v1.0.1) (2018-11-12)
 
