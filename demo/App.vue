@@ -9,11 +9,13 @@
         :files="[
           './assets/pic_160.png',
         ]"
+        v-model="fileList"
         url="http://localhost:9090/upload"
         @onChange="onChange"
         @onCancel="onCancel"
         @onSuccess="onSuccess"
         @onError="onError"
+        @onDelete="onDelete"
       />
     </div>
   </div>
@@ -22,16 +24,20 @@
 <script>
 import Uploader from '../src/index';
 // import Uploader from '../dist/uploader.js';
-// const Uploader = require('../dist/uploader.js');
 
 export default {
   name: 'app',
   components: {
     Uploader,
   },
+  data() {
+    return {
+      fileList: [],
+    }
+  },
   methods: {
     onChange(fileList) {
-      console.log('onChange: ', fileList);
+      console.log('onChange: ', JSON.parse(JSON.stringify(fileList)));
     },
     onCancel() {
       console.log('onCancel: Sucess');
@@ -41,7 +47,10 @@ export default {
     },
     onError(res) {
       console.log('onError: ', res);
-    }
+    },
+    onDelete(fileList) {
+      console.log('onDelete: ', JSON.parse(JSON.stringify(fileList)));
+    },
   },
 }
 </script>

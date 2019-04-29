@@ -47,6 +47,10 @@ const URL =
 
 export default {
   name: "Uploader",
+  model: {
+    prop: 'fileList',
+    event: 'onChange',
+  },
   props: {
     title: {
       type: String,
@@ -109,27 +113,41 @@ export default {
         enableCompress,
         maxWidth,
         quality,
+        limit,
+        files,
         fileList,
         autoUpload,
         uploadFile
       } = this;
       const target = e.target || e.srcElement;
-      const files = target.files;
+      const inputChangeFiles = target.files;
       if (files.length > 0) {
-        this.$emit("onChange", files);
-        Array.prototype.forEach.call(files, file => {
-          handleFile(file, {
-            maxWidth,
-            quality,
-            enableCompress,
-          }).then(blob => {
-            const blobURL = URL.createObjectURL(blob);
-            const fileItem = {
-              url: blobURL,
-            };
-            fileList.push(fileItem);
-            autoUpload && uploadFile(blob, fileItem);
+        if (files.length + inputChangeFiles.length > limit) {
+          alert(`不能上传超过${limit}张图片`);
+          return;
+        }
+        Promise.all(
+          Array.prototype.map.call(inputChangeFiles, file => {
+            return handleFile(file, {
+              maxWidth,
+              quality,
+              enableCompress,
+            }).then(blob => {
+              const blobURL = URL.createObjectURL(blob);
+              const fileItem = {
+                url: blobURL,
+              };
+              for (let key in file) {
+                if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                  fileItem[key] = file[key];
+                }
+              }
+              fileList.push(fileItem);
+              autoUpload && uploadFile(blob, fileItem);
+            })
           })
+        ).then((values) => {
+          this.$emit("onChange", fileList);
         });
       } else {
         this.$emit('onCancel');
@@ -151,6 +169,7 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
+      this.$emit('onDelete', fileList);
     },
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {
@@ -178,7 +197,7 @@ export default {
           "progress",
           function(evt) {
             if (evt.lengthComputable) {
-              const precent = Math.ceil(evt.loaded / evt.total) * 100;
+              const precent = Math.ceil((evt.loaded / evt.total) * 100);
               me.$set(fileItem, "progress", precent);
             }
           },
@@ -224,6 +243,9 @@ export default {
         height: 79px;
         background: no-repeat center center;
         background-size: cover;
+        &:nth-child(4n) {
+          margin-right: 0px;
+        }
       }
       .vux-uploader_file-status {
         position: relative;

@@ -20,6 +20,7 @@ npm install -S vux-uploader-component
 <template>
   <uploader
     :files=[]
+    v-model="fileList"
     url="your remote upload url"
     @onChange="onChange"
     @onCancel="onCancel"
@@ -35,9 +36,16 @@ npm install -S vux-uploader-component
     components: {
       Uploader,
     },
+    data() {
+      return {
+        fileList: [],
+      }
+    }
   }
 </script>
 ```
+
+
 
 ## Props
 
@@ -61,6 +69,28 @@ event | param | description
 `onCancel` | `()` | 选择照片后取消的回调，用于错误提示
 `onSuccess` | `(result)` | 上传请求成功后的回调，返回远程请求的返回结果
 `onError` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
+`onDelete` | `(fileList)` | 删除照片时的回调，返回`FileList`
+
+## v-model
+通过v-model可以在组件外部获取更新的`FileList`
+
+## 返回的FileList格式
+目前将File对象的属性都复制到组件自身data的FileList上，便于用户获取File对象的信息
+```json
+[
+  {
+    "fetchStatus": "success",
+    "lastModified": 1552382376925,
+    "lastModifiedDate": "Tue Mar 12 2019 17:19:36 GMT+0800 (中国标准时间)",
+    "name": "WechatIMG21.jpeg",
+    "progress": 100,
+    "size": 68905,
+    "type": "image/jpeg",
+    "url": "blob:http://0.0.0.0:8080/e3a87d67-a1dc-4909-b5fa-7bb3a7baad11",
+  }
+]
+
+```
 
 ## Todo
 - [x] 调用手机相机
@@ -71,6 +101,7 @@ event | param | description
 - [x] 支持上传图片配置
 - [x] 显示上传进度
 - [x] 支持多选
+- [x] 支持v-model获取FileList
 
 ## Development
 
