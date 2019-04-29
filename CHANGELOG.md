@@ -1,3 +1,18 @@
+<a name="1.0.4"></a>
+## [1.0.4](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.3...v1.0.4) (2019-04-29)
+
+
+### Bug Fixes
+
+* when upload length greater than limit ([5ead751](https://github.com/eJayYoung/vux-uploader-component/commit/5ead751))
+
+
+### Reverts
+
+* add travis-ci build demo command ([7587add](https://github.com/eJayYoung/vux-uploader-component/commit/7587add))
+
+
+
 <a name="1.0.3"></a>
 ## [1.0.3](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.2...v1.0.3) (2019-04-29)
 
