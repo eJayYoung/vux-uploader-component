@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     onChange(fileList) {
-      console.log('onChange: ', fileList);
+      console.log('onChange: ', JSON.parse(JSON.stringify(fileList)));
     },
     onCancel() {
       console.log('onCancel: Sucess');
@@ -49,7 +49,7 @@ export default {
       console.log('onError: ', res);
     },
     onDelete(fileList) {
-      console.log('onDelete: ', fileList);
+      console.log('onDelete: ', JSON.parse(JSON.stringify(fileList)));
     },
   },
 }

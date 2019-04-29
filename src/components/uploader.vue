@@ -120,25 +120,28 @@ export default {
       const target = e.target || e.srcElement;
       const files = target.files;
       if (files.length > 0) {
-        this.$emit("onChange", fileList);
-        Array.prototype.forEach.call(files, file => {
-          handleFile(file, {
-            maxWidth,
-            quality,
-            enableCompress,
-          }).then(blob => {
-            const blobURL = URL.createObjectURL(blob);
-            const fileItem = {
-              url: blobURL,
-            };
-            for (let key in file) {
-              if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
-                fileItem[key] = file[key];
+        Promise.all(
+          Array.prototype.map.call(files, file => {
+            return handleFile(file, {
+              maxWidth,
+              quality,
+              enableCompress,
+            }).then(blob => {
+              const blobURL = URL.createObjectURL(blob);
+              const fileItem = {
+                url: blobURL,
+              };
+              for (let key in file) {
+                if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                  fileItem[key] = file[key];
+                }
               }
-            }
-            fileList.push(fileItem);
-            autoUpload && uploadFile(blob, fileItem);
+              fileList.push(fileItem);
+              autoUpload && uploadFile(blob, fileItem);
+            })
           })
+        ).then((values) => {
+          this.$emit("onChange", fileList);
         });
       } else {
         this.$emit('onCancel');
