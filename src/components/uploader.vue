@@ -225,6 +225,9 @@ export default {
         height: 79px;
         background: no-repeat center center;
         background-size: cover;
+        &:nth-child(4n) {
+          margin-right: 0px;
+        }
       }
       .vux-uploader_file-status {
         position: relative;
