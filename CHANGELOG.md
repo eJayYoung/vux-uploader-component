@@ -1,3 +1,19 @@
+<a name="1.0.3"></a>
+## [1.0.3](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.2...v1.0.3) (2019-04-29)
+
+
+### Bug Fixes
+
+* onChange emit time ([0f34aaf](https://github.com/eJayYoung/vux-uploader-component/commit/0f34aaf))
+* upload limit bug ([2aeb97f](https://github.com/eJayYoung/vux-uploader-component/commit/2aeb97f))
+
+
+### Features
+
+* add v-model output fileList and extends File attribute ([75c6661](https://github.com/eJayYoung/vux-uploader-component/commit/75c6661))
+
+
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.1...v1.0.2) (2018-11-30)
 
