@@ -9,6 +9,7 @@
         :files="[
           './assets/pic_160.png',
         ]"
+        v-model="fileList"
         url="http://localhost:9090/upload"
         @onChange="onChange"
         @onCancel="onCancel"
@@ -29,6 +30,11 @@ export default {
   components: {
     Uploader,
   },
+  data() {
+    return {
+      fileList: [],
+    }
+  },
   methods: {
     onChange(fileList) {
       console.log('onChange: ', fileList);
@@ -42,8 +48,8 @@ export default {
     onError(res) {
       console.log('onError: ', res);
     },
-    onDelete(res) {
-      console.log('onDelete: ', res);
+    onDelete(fileList) {
+      console.log('onDelete: ', fileList);
     },
   },
 }

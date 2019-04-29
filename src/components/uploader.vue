@@ -47,6 +47,10 @@ const URL =
 
 export default {
   name: "Uploader",
+  model: {
+    prop: 'fileList',
+    event: 'onChange',
+  },
   props: {
     title: {
       type: String,
@@ -116,7 +120,7 @@ export default {
       const target = e.target || e.srcElement;
       const files = target.files;
       if (files.length > 0) {
-        this.$emit("onChange", files);
+        this.$emit("onChange", fileList);
         Array.prototype.forEach.call(files, file => {
           handleFile(file, {
             maxWidth,
@@ -127,6 +131,11 @@ export default {
             const fileItem = {
               url: blobURL,
             };
+            for (let key in file) {
+              if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                fileItem[key] = file[key];
+              }
+            }
             fileList.push(fileItem);
             autoUpload && uploadFile(blob, fileItem);
           })
