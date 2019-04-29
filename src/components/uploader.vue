@@ -114,15 +114,14 @@ export default {
         maxWidth,
         quality,
         limit,
-        files,
         fileList,
         autoUpload,
         uploadFile
       } = this;
       const target = e.target || e.srcElement;
       const inputChangeFiles = target.files;
-      if (files.length > 0) {
-        if (files.length + inputChangeFiles.length > limit) {
+      if (inputChangeFiles.length > 0) {
+        if (fileList.length + inputChangeFiles.length > limit) {
           alert(`不能上传超过${limit}张图片`);
           return;
         }
