@@ -151,6 +151,7 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
+      this.$emit('onDelete', fileList);
     },
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {

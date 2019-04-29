@@ -14,6 +14,7 @@
         @onCancel="onCancel"
         @onSuccess="onSuccess"
         @onError="onError"
+        @onDelete="onDelete"
       />
     </div>
   </div>
@@ -41,7 +42,10 @@ export default {
     },
     onError(res) {
       console.log('onError: ', res);
-    }
+    },
+    onDelete(res) {
+      console.log('onDelete: ', res);
+    },
   },
 }
 </script>
