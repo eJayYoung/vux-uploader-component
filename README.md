@@ -79,14 +79,14 @@ event | param | description
 ```json
 [
   {
-    fetchStatus: "success",
-    lastModified: 1552382376925,
-    lastModifiedDate: Tue Mar 12 2019 17:19:36 GMT+0800 (中国标准时间),
-    name: "WechatIMG21.jpeg",
-    progress: 100,
-    size: 68905,
-    type: "image/jpeg",
-    url: "blob:http://0.0.0.0:8080/e3a87d67-a1dc-4909-b5fa-7bb3a7baad11",
+    "fetchStatus": "success",
+    "lastModified": 1552382376925,
+    "lastModifiedDate": "Tue Mar 12 2019 17:19:36 GMT+0800 (中国标准时间)",
+    "name": "WechatIMG21.jpeg",
+    "progress": 100,
+    "size": 68905,
+    "type": "image/jpeg",
+    "url": "blob:http://0.0.0.0:8080/e3a87d67-a1dc-4909-b5fa-7bb3a7baad11",
   }
 ]
 
