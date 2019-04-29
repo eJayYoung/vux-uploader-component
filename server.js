@@ -21,7 +21,7 @@ app.post('/upload', upload.array('file', 5), function(req, res) {
   if (req.files.length > 0) {
     console.log('upload success');
     res.send({
-      data: 'success',
+      data: req.files,
       code: 200,
       msg: null,
     });

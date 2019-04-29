@@ -23,7 +23,6 @@
 <script>
 import Uploader from '../src/index';
 // import Uploader from '../dist/uploader.js';
-// const Uploader = require('../dist/uploader.js');
 
 export default {
   name: 'app',
