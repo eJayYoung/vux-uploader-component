@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     onChange(fileList) {
-      console.log('onChange: ', JSON.parse(JSON.stringify(fileList)));
+      console.log('onChange: ', fileList);
     },
     onCancel() {
       console.log('onCancel: Sucess');
