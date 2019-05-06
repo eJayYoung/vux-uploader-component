@@ -65,24 +65,25 @@ multiple | String \| Boolean | "" | 是否支持多选, `false`为不支持
 ## Events
 event | param | description
 ------| ----- | -----------
-`onChange` | `(fileList)` | 选完照片后确定的回调，返回`FileList`
+`onChange` | `(FileList)` | 选完照片后确定的回调，返回[`FileList`对象](https://developer.mozilla.org/zh-CN/docs/Web/API/FileList)
 `onCancel` | `()` | 选择照片后取消的回调，用于错误提示
 `onSuccess` | `(result)` | 上传请求成功后的回调，返回远程请求的返回结果
 `onError` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
-`onDelete` | `(fileList)` | 删除照片时的回调，返回`FileList`
+`onDelete` | `()` | 删除照片时的回调
 
 ## v-model
-通过v-model可以在组件外部获取更新的`FileList`
+通过v-model可以在组件外部获取更新的组件`data`: `FileList`
 
-## 返回的FileList格式
+### 返回的FileList格式
 目前将File对象的属性都复制到组件自身data的FileList上，便于用户获取File对象的信息
 ```json
 [
   {
+    "blob": Blob,
     "fetchStatus": "success",
     "lastModified": 1552382376925,
     "lastModifiedDate": "Tue Mar 12 2019 17:19:36 GMT+0800 (中国标准时间)",
-    "name": "WechatIMG21.jpeg",
+    "name": "YourImage.jpeg",
     "progress": 100,
     "size": 68905,
     "type": "image/jpeg",
