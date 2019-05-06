@@ -149,6 +149,7 @@ export default {
           })
         ).then(() => {
           this.$emit('onChangeComplete', fileList);
+          this.$refs.input.value = '';
         })
       } else {
         this.$emit('onCancel');
