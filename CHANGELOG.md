@@ -1,3 +1,13 @@
+<a name="1.0.7"></a>
+## [1.0.7](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.6...v1.0.7) (2019-05-06)
+
+
+### Bug Fixes
+
+* on change complete should clear input's fileList ([d839318](https://github.com/eJayYoung/vux-uploader-component/commit/d839318))
+
+
+
 <a name="1.0.6"></a>
 ## [1.0.6](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.5...v1.0.6) (2019-05-06)
 
