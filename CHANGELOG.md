@@ -1,3 +1,13 @@
+<a name="1.0.5"></a>
+## [1.0.5](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.4...v1.0.5) (2019-05-05)
+
+
+### Bug Fixes
+
+* onChange should return natural FileList ([6b21754](https://github.com/eJayYoung/vux-uploader-component/commit/6b21754))
+
+
+
 <a name="1.0.4"></a>
 ## [1.0.4](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.3...v1.0.4) (2019-04-29)
 

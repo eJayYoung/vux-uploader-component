@@ -49,7 +49,7 @@ export default {
   name: "Uploader",
   model: {
     prop: 'fileList',
-    event: 'onChange',
+    event: 'onChangeComplete',
   },
   props: {
     title: {
@@ -126,24 +126,29 @@ export default {
           return;
         }
         this.$emit("onChange", inputChangeFiles);
-        Array.prototype.map.call(inputChangeFiles, file => {
-          return handleFile(file, {
-            maxWidth,
-            quality,
-            enableCompress,
-          }).then(blob => {
-            const blobURL = URL.createObjectURL(blob);
-            const fileItem = {
-              url: blobURL,
-            };
-            for (let key in file) {
-              if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
-                fileItem[key] = file[key];
+        Promise.all(
+          Array.prototype.map.call(inputChangeFiles, file => {
+            return handleFile(file, {
+              maxWidth,
+              quality,
+              enableCompress,
+            }).then(blob => {
+              const blobURL = URL.createObjectURL(blob);
+              const fileItem = {
+                url: blobURL,
+                blob,
+              };
+              for (let key in file) {
+                if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                  fileItem[key] = file[key];
+                }
               }
-            }
-            fileList.push(fileItem);
-            autoUpload && uploadFile(blob, fileItem);
+              fileList.push(fileItem);
+              autoUpload && uploadFile(blob, fileItem);
+            })
           })
+        ).then(() => {
+          this.$emit('onChangeComplete', fileList);
         })
       } else {
         this.$emit('onCancel');
@@ -165,7 +170,7 @@ export default {
       const { currentIndex, fileList } = this;
       this.hidePreviewer();
       fileList.splice(currentIndex, 1);
-      this.$emit('onDelete', fileList);
+      this.$emit('onDelete');
     },
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {

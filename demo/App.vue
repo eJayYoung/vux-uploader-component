@@ -48,8 +48,8 @@ export default {
     onError(res) {
       console.log('onError: ', res);
     },
-    onDelete(fileList) {
-      console.log('onDelete: ', JSON.parse(JSON.stringify(fileList)));
+    onDelete() {
+      console.log('onDelete: ', JSON.parse(JSON.stringify(this.fileList)));
     },
   },
 }
