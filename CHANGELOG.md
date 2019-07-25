@@ -1,3 +1,13 @@
+<a name="1.0.12"></a>
+## [1.0.12](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.11...v1.0.12) (2019-07-25)
+
+
+### Bug Fixes
+
+* multiple preview backgroundImage replace ([66de0df](https://github.com/eJayYoung/vux-uploader-component/commit/66de0df))
+
+
+
 <a name="1.0.11"></a>
 ## [1.0.11](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.10...v1.0.11) (2019-07-25)
 
