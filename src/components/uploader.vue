@@ -127,13 +127,18 @@ export default {
       previewVisible: false
     };
   },
-  created() {
-    const cookedFile = this.files.map(n => {
-      return {
-        url: n
-      };
-    });
-    this.fileList = this.fileList.concat(cookedFile);
+  watch: {
+    files: {
+      deep: true,
+      handler(files) {
+        const cookedFile = files.map(n => {
+          return {
+            url: n
+          }
+        });
+        this.fileList = this.fileList.concat(cookedFile);
+      },
+    }
   },
   methods: {
     async change(e) {
