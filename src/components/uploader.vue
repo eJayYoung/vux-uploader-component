@@ -232,10 +232,11 @@ export default {
               const result = JSON.parse(xhr.responseText);
               me.$emit("onSuccess", result);
               me.$set(fileItem, "fetchStatus", "success");
-              resolve();
+              resolve(result);
             } else {
               me.$emit("onError", xhr);
               me.$set(fileItem, "fetchStatus", "fail");
+              reject(xhr);
             }
           }
         };
@@ -279,19 +280,17 @@ export default {
   }
   .vux-uploader_bd {
     overflow: hidden;
+    margin-left: -9px;
     .vux-uploader_files {
       list-style: none;
       .vux-uploader_file {
         float: left;
-        margin-right: 9px;
+        margin-left: 9px;
         margin-bottom: 9px;
         width: 79px;
         height: 79px;
         background: no-repeat center center;
         background-size: cover;
-        &:nth-child(4n) {
-          margin-right: 0px;
-        }
       }
       .vux-uploader_file-status {
         position: relative;
@@ -327,7 +326,7 @@ export default {
     .vux-uploader_input-box {
       float: left;
       position: relative;
-      margin-right: 9px;
+      margin-left: 9px;
       margin-bottom: 9px;
       width: 77px;
       height: 77px;
