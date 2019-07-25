@@ -17,6 +17,7 @@
           linkid: '2323',
           modelname: 'modelname'
         }"
+        readonly
         @onChange="onChange"
         @onCancel="onCancel"
         @onSuccess="onSuccess"

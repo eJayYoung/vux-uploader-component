@@ -28,7 +28,7 @@
           </div>
         </li>
       </ul>
-      <div class="vux-uploader_input-box" v-show="fileList.length < limit">
+      <div class="vux-uploader_input-box" v-show="fileList.length < limit && !readonly">
         <input
           class="vux-uploader_input"
           ref="input"
@@ -48,7 +48,7 @@
       @click="hidePreviewer"
     >
       <div class="vux-uploader_preview-img" id="previewerImg"></div>
-      <div class="vux-uploader_del" @click="deleteImg"></div>
+      <div class="vux-uploader_del" v-if="!readonly" @click="deleteImg"></div>
     </div>
   </div>
 </template>
@@ -115,7 +115,11 @@ export default {
     multiple: {
       type: String | Boolean,
       default: ""
-    }
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
