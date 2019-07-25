@@ -122,12 +122,18 @@ export default {
   },
   data() {
     return {
-      fileList: this.files,
+      fileList: [],
       currentIndex: 0,
       previewVisible: false
     };
   },
   watch: {
+    files: {
+      deep: true,
+      handler(files) {
+        this.fileList = files;
+      }
+    },
     fileList: {
       deep: true,
       handler(fileList) {
