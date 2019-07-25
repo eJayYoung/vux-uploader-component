@@ -17,7 +17,6 @@
           linkid: '2323',
           modelname: 'modelname'
         }"
-        readonly
         @onChange="onChange"
         @onCancel="onCancel"
         @onSuccess="onSuccess"
@@ -55,8 +54,11 @@ export default {
     onError(res) {
       console.log('onError: ', res);
     },
-    onDelete() {
-      console.log('onDelete: ', JSON.parse(JSON.stringify(this.fileList)));
+    onDelete(cb) {
+      setTimeout(() => {
+        console.log('onDelete: ', JSON.parse(JSON.stringify(this.fileList)));
+        cb && cb();
+      }, 3000);
     },
   },
 }

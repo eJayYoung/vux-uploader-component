@@ -59,8 +59,11 @@ enableCompress | Boolean | true | 是否压缩
 maxWidth | String \| Number | 1024 | 图片压缩最大宽度
 quality | String \| Number | 0.92 | 图片压缩率
 url | String | - | 上传服务器url
+params | Object | - | 上传文件时携带的自定义参数
+name | String | 'file' | 上传文件时FormData的Key，默认为file
 autoUpload | Boolean | true | 是否自动开启上传
 multiple | String \| Boolean | "" | 是否支持多选, `false`为不支持
+readonly | Boolean | false | 只读模式（隐藏添加和删除按钮）
 
 ## Events
 event | param | description
@@ -69,7 +72,7 @@ event | param | description
 `onCancel` | `()` | 选择照片后取消的回调，用于错误提示
 `onSuccess` | `(result)` | 上传请求成功后的回调，返回远程请求的返回结果
 `onError` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
-`onDelete` | `()` | 删除照片时的回调
+`onDelete` | `(cb)` | 删除照片时的回调,返回隐藏Previewer，删除图片的回调，没监听`onDelete`事件的时候，直接执行删除回调
 
 ## v-model
 通过v-model可以在组件外部获取更新的组件`data`: `FileList`

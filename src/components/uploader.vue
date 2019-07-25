@@ -45,9 +45,8 @@
       class="vux-uploader_previewer"
       id="previewer"
       v-show="previewVisible"
-      @click="hidePreviewer"
     >
-      <div class="vux-uploader_preview-img" id="previewerImg"></div>
+      <div class="vux-uploader_preview-img" id="previewerImg" @click="hidePreviewer"></div>
       <div class="vux-uploader_del" v-if="!readonly" @click="deleteImg"></div>
     </div>
   </div>
@@ -198,9 +197,15 @@ export default {
     },
     deleteImg() {
       const { currentIndex, fileList } = this;
-      this.hidePreviewer();
-      fileList.splice(currentIndex, 1);
-      this.$emit("onDelete");
+      const delFn = () => {
+        this.hidePreviewer();
+        fileList.splice(currentIndex, 1);
+      };
+      if (this.$listeners.onDelete) {
+        this.$emit("onDelete", delFn);
+      } else {
+        delFn();
+      }
     },
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {
