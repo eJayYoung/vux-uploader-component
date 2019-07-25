@@ -20,6 +20,21 @@
         @on-error="onError"
         @on-delete="onDelete"
       />
+      <uploader
+        v-model="fileListCopy"
+        url="http://localhost:9090/upload"
+        name="upload"
+        :params="{
+          token: '13579',
+          linkid: '2323',
+          modelname: 'modelname'
+        }"
+        @on-change="onChange"
+        @on-cancel="onCancel"
+        @on-success="onSuccess"
+        @on-error="onError"
+        @on-delete="onDelete"
+      />
     </div>
   </div>
 </template>
@@ -36,6 +51,7 @@ export default {
   data() {
     return {
       fileList: [],
+      fileListCopy: [],
     }
   },
   mounted() {

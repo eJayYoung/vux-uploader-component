@@ -44,7 +44,7 @@
     <div
       class="vux-uploader_previewer"
       id="previewer"
-      v-show="previewVisible"
+      v-if="previewVisible"
     >
       <div class="vux-uploader_preview-img" id="previewerImg" @click="hidePreviewer"></div>
       <div class="vux-uploader_del" v-if="!readonly" @click="deleteImg"></div>
@@ -195,10 +195,12 @@ export default {
       }
     },
     handleFileClick(e, item, index) {
-      const previewerImg = document.getElementById("previewerImg");
-      previewerImg.style.backgroundImage = `url(${item.url})`;
-      this.currentIndex = index;
       this.showPreviewer();
+      this.$nextTick(() => {
+        const previewerImg = document.getElementById("previewerImg");
+        previewerImg.style.backgroundImage = `url(${item.url})`;
+        this.currentIndex = index;
+      })
     },
     showPreviewer() {
       this.previewVisible = true;
