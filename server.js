@@ -17,9 +17,8 @@ const allowCrossDomain = function(req, res, next) {
 };
 app.use(allowCrossDomain);
 
-app.post('/upload', upload.array('file', 5), function(req, res) {
-  if (req.files.length > 0) {
-    console.log('upload success');
+app.post('/upload', upload.any(), function(req, res) {
+  if (req.files.length > 0 && req.files.length <= 5) {
     res.send({
       data: req.files,
       code: 200,
