@@ -6,31 +6,48 @@
     </div>
     <div class="vux-uploader_bd">
       <ul class="vux-uploader_files">
-        <li :class="{
+        <li
+          :class="{
               'vux-uploader_file': true,
               'vux-uploader_file-status': !!item.fetchStatus && item.fetchStatus !== 'success'
             }"
-            v-for="(item, index) in fileList"
-            :key="index"
-            :style="{
+          v-for="(item, index) in fileList"
+          :key="index"
+          :style="{
               backgroundImage: `url(${item.url})`
             }"
-            @click="handleFileClick($event, item, index)"
+          @click="handleFileClick($event, item, index)"
         >
-          <div v-if="!!item.fetchStatus && item.fetchStatus !== 'success'" class="vux-uploader_file-content">
+          <div
+            v-if="!!item.fetchStatus && item.fetchStatus !== 'success'"
+            class="vux-uploader_file-content"
+          >
             {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
             <!-- progress !== 0 && progress < 100 -->
             <i v-if="item.fetchStatus === 'fail'" class="upload-error"></i>
           </div>
         </li>
       </ul>
-      <div class="vux-uploader_input-box" v-show="fileList.length < limit">
-        <input class="vux-uploader_input" ref="input" type="file" name="uploadInput" accept="image/*" :capture="capture" :multiple="multiple" @change="change"/>
+      <div class="vux-uploader_input-box" v-show="fileList.length < limit && !readonly">
+        <input
+          class="vux-uploader_input"
+          ref="input"
+          type="file"
+          name="uploadInput"
+          accept="image/*"
+          :capture="capture"
+          :multiple="multiple"
+          @change="change"
+        />
       </div>
     </div>
-    <div class="vux-uploader_previewer" id="previewer" v-show="previewVisible" @click="hidePreviewer">
-      <div class="vux-uploader_preview-img" id="previewerImg"></div>
-      <div class="vux-uploader_del" @click="deleteImg"></div>
+    <div
+      class="vux-uploader_previewer"
+      id="previewer"
+      v-show="previewVisible"
+    >
+      <div class="vux-uploader_preview-img" id="previewerImg" @click="hidePreviewer"></div>
+      <div class="vux-uploader_del" v-if="!readonly" @click="deleteImg"></div>
     </div>
   </div>
 </template>
@@ -42,14 +59,14 @@ const URL =
   window.URL && window.URL.createObjectURL
     ? window.URL
     : window.webkitURL && window.webkitURL.createObjectURL
-      ? window.webkitURL
-      : null;
+    ? window.webkitURL
+    : null;
 
 export default {
   name: "Uploader",
   model: {
-    prop: 'fileList',
-    event: 'onChangeComplete',
+    prop: "fileList",
+    event: "onChangeComplete"
   },
   props: {
     title: {
@@ -83,20 +100,31 @@ export default {
     url: {
       type: String
     },
+    params: {
+      type: Object,
+    },
+    name: {
+      type: String,
+      default: 'file',
+    },
     autoUpload: {
       type: Boolean,
       default: true
     },
     multiple: {
       type: String | Boolean,
-      default: "",
+      default: ""
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
     return {
       fileList: [],
       currentIndex: 0,
-      previewVisible: false,
+      previewVisible: false
     };
   },
   created() {
@@ -131,28 +159,28 @@ export default {
             return handleFile(file, {
               maxWidth,
               quality,
-              enableCompress,
+              enableCompress
             }).then(blob => {
               const blobURL = URL.createObjectURL(blob);
               const fileItem = {
                 url: blobURL,
-                blob,
+                blob
               };
               for (let key in file) {
-                if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                if (["slice", "webkitRelativePath"].indexOf(key) === -1) {
                   fileItem[key] = file[key];
                 }
               }
               fileList.push(fileItem);
               autoUpload && uploadFile(blob, fileItem);
-            })
+            });
           })
         ).then(() => {
-          this.$emit('onChangeComplete', fileList);
-          this.$refs.input.value = '';
-        })
+          this.$emit("onChangeComplete", fileList);
+          this.$refs.input.value = "";
+        });
       } else {
-        this.$emit('onCancel');
+        this.$emit("onCancel");
       }
     },
     handleFileClick(e, item, index) {
@@ -169,19 +197,30 @@ export default {
     },
     deleteImg() {
       const { currentIndex, fileList } = this;
-      this.hidePreviewer();
-      fileList.splice(currentIndex, 1);
-      this.$emit('onDelete');
+      const delFn = () => {
+        this.hidePreviewer();
+        fileList.splice(currentIndex, 1);
+      };
+      if (this.$listeners.onDelete) {
+        this.$emit("onDelete", delFn);
+      } else {
+        delFn();
+      }
     },
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {
         const me = this;
-        const { url } = me;
+        const { url, params, name } = me;
         me.$set(fileItem, "fetchStatus", "progress");
         me.$set(fileItem, "progress", 0);
         const formData = new FormData();
         const xhr = new XMLHttpRequest();
-        formData.append("file", blob);
+        formData.append(name, blob);
+        if (params) {
+          for(let key in params) {
+            formData.append(key, params[key]);
+          }
+        }
         xhr.onreadystatechange = () => {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
