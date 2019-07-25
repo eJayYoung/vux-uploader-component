@@ -65,8 +65,8 @@ const URL =
 export default {
   name: "Uploader",
   model: {
-    prop: "fileList",
-    event: "onChangeComplete"
+    prop: "files",
+    event: "on-fileList-change"
   },
   props: {
     title: {
@@ -122,23 +122,18 @@ export default {
   },
   data() {
     return {
-      fileList: [],
+      fileList: this.files,
       currentIndex: 0,
       previewVisible: false
     };
   },
   watch: {
-    files: {
+    fileList: {
       deep: true,
-      handler(files) {
-        const cookedFile = files.map(n => {
-          return {
-            url: n
-          }
-        });
-        this.fileList = this.fileList.concat(cookedFile);
-      },
-    }
+      handler(fileList) {
+        this.$emit('on-fileList-change', fileList);
+      }
+    },
   },
   methods: {
     async change(e) {
@@ -158,7 +153,6 @@ export default {
           alert(`不能上传超过${limit}张图片`);
           return;
         }
-        this.$emit("onChange", inputChangeFiles);
         Promise.all(
           Array.prototype.map.call(inputChangeFiles, file => {
             return handleFile(file, {
@@ -176,16 +170,22 @@ export default {
                   fileItem[key] = file[key];
                 }
               }
-              fileList.push(fileItem);
-              autoUpload && uploadFile(blob, fileItem);
+              if (autoUpload){
+                uploadFile(blob, fileItem).then((result) => {
+                  fileList.push(fileItem);
+                  this.$emit('on-change', fileItem, fileList);
+                });
+              } else {
+                fileList.push(fileItem);
+                this.$emit('on-change', fileItem, fileList);
+              }
             });
           })
         ).then(() => {
-          this.$emit("onChangeComplete", fileList);
           this.$refs.input.value = "";
         });
       } else {
-        this.$emit("onCancel");
+        this.$emit("on-cancel");
       }
     },
     handleFileClick(e, item, index) {
@@ -204,10 +204,11 @@ export default {
       const { currentIndex, fileList } = this;
       const delFn = () => {
         this.hidePreviewer();
+        this.$emit('on-change', fileList[currentIndex], fileList);
         fileList.splice(currentIndex, 1);
       };
       if (this.$listeners.onDelete) {
-        this.$emit("onDelete", delFn);
+        this.$emit("on-delete", delFn);
       } else {
         delFn();
       }
@@ -230,11 +231,11 @@ export default {
           if (xhr.readyState === 4) {
             if (xhr.status === 200) {
               const result = JSON.parse(xhr.responseText);
-              me.$emit("onSuccess", result);
+              me.$emit("on-success", result, fileItem);
               me.$set(fileItem, "fetchStatus", "success");
               resolve(result);
             } else {
-              me.$emit("onError", xhr);
+              me.$emit("on-error", xhr);
               me.$set(fileItem, "fetchStatus", "fail");
               reject(xhr);
             }

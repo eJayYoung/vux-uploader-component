@@ -6,7 +6,6 @@
     </div>
     <div class="content">
       <uploader
-        :files="files"
         v-model="fileList"
         url="http://localhost:9090/upload"
         name="upload"
@@ -15,11 +14,11 @@
           linkid: '2323',
           modelname: 'modelname'
         }"
-        @onChange="onChange"
-        @onCancel="onCancel"
-        @onSuccess="onSuccess"
-        @onError="onError"
-        @onDelete="onDelete"
+        @on-change="onChange"
+        @on-cancel="onCancel"
+        @on-success="onSuccess"
+        @on-error="onError"
+        @on-delete="onDelete"
       />
     </div>
   </div>
@@ -37,30 +36,32 @@ export default {
   data() {
     return {
       fileList: [],
-      files: [],
     }
   },
   mounted() {
     setTimeout(() => {
-      this.files.push('./assets/pic_160.png');
+      this.fileList.push({
+        url: './assets/pic_160.png'
+      })
     }, 1000);
   },
   methods: {
-    onChange(fileList) {
-      console.log('onChange: ', fileList);
+    onChange(fileItem, fileList) {
+      console.log('on-change: ', fileItem, fileList);
     },
     onCancel() {
-      console.log('onCancel: Sucess');
+      console.log('on-cancel: Sucess');
     },
-    onSuccess(res) {
-      console.log('onSuccess: ', res);
+    onSuccess(res, fileItem) {
+      console.log('on-success: ', res);
+      fileItem.fileid = res.data;
     },
     onError(res) {
-      console.log('onError: ', res);
+      console.log('on-error: ', res);
     },
     onDelete(cb) {
       setTimeout(() => {
-        console.log('onDelete: ', JSON.parse(JSON.stringify(this.fileList)));
+        console.log('on-delete: ', JSON.parse(JSON.stringify(this.fileList)));
         cb && cb();
       }, 3000);
     },
