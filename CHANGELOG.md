@@ -1,3 +1,15 @@
+<a name="1.0.8"></a>
+## [1.0.8](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.7...v1.0.8) (2019-07-25)
+
+
+### Features
+
+* supoort return async delete action when onDelete event emit ([e5b8fa8](https://github.com/eJayYoung/vux-uploader-component/commit/e5b8fa8))
+* support extra params for post FormData, and rename the file key ([747a38d](https://github.com/eJayYoung/vux-uploader-component/commit/747a38d))
+* support readonly property ([106b59f](https://github.com/eJayYoung/vux-uploader-component/commit/106b59f))
+
+
+
 <a name="1.0.7"></a>
 ## [1.0.7](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.6...v1.0.7) (2019-05-06)
 
