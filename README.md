@@ -19,13 +19,13 @@ npm install -S vux-uploader-component
 ```html
 <template>
   <uploader
-    :files=[]
     v-model="fileList"
-    url="your remote upload url"
-    @onChange="onChange"
-    @onCancel="onCancel"
-    @onSuccess="onSuccess"
-    @onError="onError"
+    :url="remoteUrl"
+    @on-change="onChange"
+    @on-cancel="onCancel"
+    @on-success="onSuccess"
+    @on-error="onError"
+    @on-delete="onDelete"
   >
   </uploader>
 </template>
@@ -52,7 +52,7 @@ npm install -S vux-uploader-component
 property | type | default | description
 ---------| ---- | ------- | -----------
 title | String | '图片上传' | 组件标题
-files | Array | [] | 图片文件列表
+files | Array | [] | 初始化数据源，通过`on-fileList-change`事件绑定v-model
 limit | Number \| String | 5 | 限制上传图片个数
 capture | Number \| String | false | 是否只选择调用相机
 enableCompress | Boolean | true | 是否压缩
@@ -68,19 +68,18 @@ readonly | Boolean | false | 只读模式（隐藏添加和删除按钮）
 ## Events
 event | param | description
 ------| ----- | -----------
-`onChange` | `(FileList)` | 选完照片后确定的回调，返回[`FileList`对象](https://developer.mozilla.org/zh-CN/docs/Web/API/FileList)
-`onCancel` | `()` | 选择照片后取消的回调，用于错误提示
-`onSuccess` | `(result)` | 上传请求成功后的回调，返回远程请求的返回结果
-`onError` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
-`onDelete` | `(cb)` | 删除照片时的回调,返回隐藏Previewer，删除图片的回调，没监听`onDelete`事件的时候，直接执行删除回调
+`on-change` | `(FileItem, FileList)` | 选完照片，删除照片时，FileList变化时触发，返回当前改变的FileItem，以及当前的FileList
+`on-cancel` | `()` | 选择照片后取消的回调，用于错误提示
+`on-success` | `(result, fileItem)` | 上传请求成功后的回调，返回远程请求的返回结果，及当前添加文件的FileItem
+`on-error` | `(xhr)` | 上传请求失败后的回调，返回`xhr`
+`on-delete` | `(cb)` | 删除照片时的回调,返回隐藏Previewer，删除图片的回调，没监听`onDelete`事件的时候，直接执行删除回调
 
 ## v-model
-通过v-model可以在组件外部获取更新的组件`data`: `FileList`
+通过v-model可以在组件外部获取更新的组件的`FileList`
 
-### 返回的FileList格式
-目前将File对象的属性都复制到组件自身data的FileList上，便于用户获取File对象的信息
+### 返回的FileItem格式
+目前将File对象的属性复制组成FielItem, FileItem组成FileList，便于用户获取File对象的信息
 ```json
-[
   {
     "blob": Blob,
     "fetchStatus": "success",
@@ -92,8 +91,6 @@ event | param | description
     "type": "image/jpeg",
     "url": "blob:http://0.0.0.0:8080/e3a87d67-a1dc-4909-b5fa-7bb3a7baad11",
   }
-]
-
 ```
 
 ## Todo
