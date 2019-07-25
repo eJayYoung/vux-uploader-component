@@ -6,9 +6,7 @@
     </div>
     <div class="content">
       <uploader
-        :files="[
-          './assets/pic_160.png',
-        ]"
+        :files="files"
         v-model="fileList"
         url="http://localhost:9090/upload"
         name="upload"
@@ -39,7 +37,13 @@ export default {
   data() {
     return {
       fileList: [],
+      files: [],
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.files.push('./assets/pic_160.png');
+    }, 1000);
   },
   methods: {
     onChange(fileList) {
