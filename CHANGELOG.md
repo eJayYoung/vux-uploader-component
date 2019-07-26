@@ -1,3 +1,13 @@
+<a name="1.0.13"></a>
+## [1.0.13](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.12...v1.0.13) (2019-07-26)
+
+
+### Bug Fixes
+
+* listener event Name changed ([bce5c92](https://github.com/eJayYoung/vux-uploader-component/commit/bce5c92))
+
+
+
 <a name="1.0.12"></a>
 ## [1.0.12](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.11...v1.0.12) (2019-07-25)
 
