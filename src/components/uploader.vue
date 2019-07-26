@@ -180,6 +180,8 @@ export default {
                 uploadFile(blob, fileItem).then((result) => {
                   fileList.push(fileItem);
                   this.$emit('on-change', fileItem, fileList);
+                }).catch(e => {
+                  fileList.push(fileItem);
                 });
               } else {
                 fileList.push(fileItem);
