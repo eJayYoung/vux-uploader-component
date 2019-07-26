@@ -215,7 +215,8 @@ export default {
         this.$emit('on-change', fileList[currentIndex], fileList);
         fileList.splice(currentIndex, 1);
       };
-      if (this.$listeners.onDelete) {
+      console.log(this.$listeners);
+      if (this.$listeners['on-delete']) {
         this.$emit("on-delete", delFn);
       } else {
         delFn();
