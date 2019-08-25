@@ -1,3 +1,13 @@
+<a name="1.0.14"></a>
+## [1.0.14](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.13...v1.0.14) (2019-07-26)
+
+
+### Bug Fixes
+
+* when on-error should render fileList ([bb98b57](https://github.com/eJayYoung/vux-uploader-component/commit/bb98b57))
+
+
+
 <a name="1.0.13"></a>
 ## [1.0.13](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.12...v1.0.13) (2019-07-26)
 
