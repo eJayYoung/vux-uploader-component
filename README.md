@@ -166,6 +166,7 @@ npm install -S vux-uploader-component
 - [x] 显示上传进度
 - [x] 支持多选
 - [x] 支持 v-model 获取 FileList
+- [ ] 预览功能增强，接入Priviewer
 
 ## Development
 
