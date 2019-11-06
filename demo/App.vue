@@ -39,11 +39,11 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
+    // setTimeout(() => {
       this.fileList.push({
         url: './assets/pic_160.png'
       })
-    }, 1000);
+    // }, 1000);
   },
   methods: {
     onChange(fileItem, fileList) {
@@ -60,10 +60,10 @@ export default {
       console.log('on-error: ', res);
     },
     onDelete(cb) {
-      setTimeout(() => {
+      // setTimeout(() => {
         console.log('on-delete: ', JSON.parse(JSON.stringify(this.fileList)));
         cb && cb();
-      }, 3000);
+      // }, 3000);
     },
   },
 }

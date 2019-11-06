@@ -17,6 +17,7 @@
     "server": "nodemon  server.js"
   },
   "dependencies": {
+    "alloyfinger": "^0.1.16",
     "exif-js": "^2.3.0"
   },
   "peerDependencies": {

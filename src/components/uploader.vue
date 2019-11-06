@@ -41,17 +41,25 @@
         />
       </div>
     </div>
-    <div
+    <!-- <div
       class="vux-uploader_previewer"
       id="previewer"
       v-if="previewVisible"
     >
       <div class="vux-uploader_preview-img" id="previewerImg" @click="hidePreviewer"></div>
       <div class="vux-uploader_del" v-if="!readonly" @click="deleteImg"></div>
-    </div>
+    </div> -->
+    <priviewer
+      :current.sync="previewerIndex"
+      :visible.sync="previewVisible"
+      :list="fileList"
+      :readonly="readonly"
+      @on-delete="deleteImg"
+    ></priviewer>
   </div>
 </template>
 <script>
+import Priviewer from "./previewer";
 import { handleFile, transformCoordinate, dataURItoBlob } from "../utils";
 
 // compatibility for window.URL
@@ -64,6 +72,9 @@ const URL =
 
 export default {
   name: "Uploader",
+  components: {
+    Priviewer,
+  },
   model: {
     prop: "files",
     event: "on-fileList-change"
@@ -124,7 +135,8 @@ export default {
     return {
       fileList: [],
       currentIndex: 0,
-      previewVisible: false
+      previewVisible: false,
+      previewerIndex: 0,
     };
   },
   watch: {
@@ -198,10 +210,11 @@ export default {
     },
     handleFileClick(e, item, index) {
       this.showPreviewer();
+      this.previewerIndex = index;
       this.$nextTick(() => {
-        const previewerImg = document.getElementById("previewerImg");
-        previewerImg.style.backgroundImage = `url(${item.url})`;
-        this.currentIndex = index;
+        // const previewerImg = document.getElementById("previewerImg");
+        // previewerImg.style.backgroundImage = `url(${item.url})`;
+        // this.currentIndex = index;
       })
     },
     showPreviewer() {
@@ -217,7 +230,7 @@ export default {
         this.$emit('on-change', fileList[currentIndex], fileList);
         fileList.splice(currentIndex, 1);
       };
-      console.log(this.$listeners);
+      // console.log(this.$listeners);
       if (this.$listeners['on-delete']) {
         this.$emit("on-delete", delFn);
       } else {
@@ -373,40 +386,6 @@ export default {
       }
     }
   }
-  .vux-uploader_previewer {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #000;
-    z-index: 1000;
-    .vux-uploader_preview-img {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 60px;
-      left: 0;
-      background: center center no-repeat;
-      background-size: contain;
-    }
-    .vux-uploader_del {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      background-color: #0d0d0d;
-      color: #ffffff;
-      height: 60px;
-      line-height: 60px;
-      text-align: center;
-      font-family: "weui";
-      &:after {
-        color: #ffffff;
-        font-size: 22px;
-        content: "\EA11";
-      }
-    }
-  }
+
 }
 </style>
