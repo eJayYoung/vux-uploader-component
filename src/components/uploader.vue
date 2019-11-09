@@ -124,9 +124,8 @@ export default {
   },
   data() {
     return {
-      fileList: [],
+      fileList: this.files,
       currentIndex: 0,
-      previewVisible: false,
       previewerIndex: 0
     }
   },
@@ -215,30 +214,16 @@ export default {
       }
     },
     handleFileClick(e, item, index) {
-      // this.showPreviewer();
       this.$refs.previewer.show(index)
-      // this.previewerIndex = index;
-      this.$nextTick(() => {
-        // const previewerImg = document.getElementById("previewerImg");
-        // previewerImg.style.backgroundImage = `url(${item.url})`;
-        // this.currentIndex = index;
-      })
-    },
-    showPreviewer() {
-      // this.previewVisible = true;
-    },
-    hidePreviewer() {
-      this.previewVisible = false
+      this.previewerIndex = index
     },
     deleteImg() {
       const { previewerIndex, fileList } = this
       const delFn = () => {
-        this.hidePreviewer()
         this.$emit('on-change', fileList[previewerIndex], fileList)
         fileList.splice(previewerIndex, 1)
         this.$refs.previewer.close()
       }
-      // console.log(this.$listeners);
       if (this.$listeners['on-delete']) {
         this.$emit('on-delete', delFn)
       } else {

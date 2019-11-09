@@ -21,11 +21,14 @@ describe('vux-uploader-component', () => {
       const uploader = mount(Uploader, {
         propsData: {
           files: [
-            './assets/pic_160.png',
+            {
+              url: './assets/pic_160.png'
+            },
           ],
         }
       });
       it('length should be 1', () => {
+        console.log(uploader.findAll('.vux-uploader_file').length)
         expect(uploader.findAll('.vux-uploader_file').length).to.equal(1);
       });
     });
@@ -33,12 +36,24 @@ describe('vux-uploader-component', () => {
       const uploader = mount(Uploader, {
         propsData: {
           files: [
-            './assets/pic_160.png',
-            './assets/pic_160.png',
-            './assets/pic_160.png',
-            './assets/pic_160.png',
-            './assets/pic_160.png',
-            './assets/pic_160.png',
+            {
+              url: './assets/pic_160.png'
+            },
+            {
+              url: './assets/pic_160.png'
+            },
+            {
+              url: './assets/pic_160.png'
+            },
+            {
+              url: './assets/pic_160.png'
+            },
+            {
+              url: './assets/pic_160.png'
+            },
+            {
+              url: './assets/pic_160.png'
+            },
           ],
         }
       });
@@ -75,7 +90,7 @@ describe('vux-uploader-component', () => {
       it('default hide', () => {
         const uploader = mount(Uploader);
         const previewer = uploader.find('#previewer');
-        expect(previewer.isVisible()).to.be.false;
+        expect(previewer.attributes('aria-hidden')).to.equal('true');
       });
       it('click to show', () => {
         const uploader = mount(Uploader, {
