@@ -25,47 +25,51 @@
 </template>
 
 <script>
-import Uploader from '../src/index';
+import Uploader from '../src/index'
 // import Uploader from '../dist/uploader.js';
 
 export default {
   name: 'app',
   components: {
-    Uploader,
+    Uploader
   },
   data() {
     return {
-      fileList: [],
+      fileList: [
+        {
+          url: './assets/pic_160.png'
+        }
+      ]
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.fileList.push({
-        url: './assets/pic_160.png'
-      })
-    }, 1000);
+    // setTimeout(() => {
+    // this.fileList.push({
+    //   url: './assets/pic_160.png'
+    // })
+    // }, 1000);
   },
   methods: {
     onChange(fileItem, fileList) {
-      console.log('on-change: ', fileItem, fileList);
+      console.log('on-change: ', fileItem, fileList)
     },
     onCancel() {
-      console.log('on-cancel: Sucess');
+      console.log('on-cancel: Sucess')
     },
     onSuccess(res, fileItem) {
-      console.log('on-success: ', res);
-      fileItem.fileid = res.data;
+      console.log('on-success: ', res)
+      fileItem.fileid = res.data
     },
     onError(res) {
-      console.log('on-error: ', res);
+      console.log('on-error: ', res)
     },
     onDelete(cb) {
-      setTimeout(() => {
-        console.log('on-delete: ', JSON.parse(JSON.stringify(this.fileList)));
-        cb && cb();
-      }, 3000);
-    },
-  },
+      // setTimeout(() => {
+      console.log('on-delete: ', JSON.parse(JSON.stringify(this.fileList)))
+      cb && cb()
+      // }, 3000);
+    }
+  }
 }
 </script>
 
@@ -94,5 +98,4 @@ body {
     }
   }
 }
-
 </style>
