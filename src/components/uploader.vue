@@ -24,11 +24,17 @@
           >
             {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
             <!-- progress !== 0 && progress < 100 -->
-            <i v-if="item.fetchStatus === 'fail'" class="upload-error"></i>
+            <i
+              v-if="item.fetchStatus === 'fail'"
+              class="upload-error"
+            ></i>
           </div>
         </li>
       </ul>
-      <div class="vux-uploader_input-box" v-show="fileList.length < limit && !readonly">
+      <div
+        class="vux-uploader_input-box"
+        v-show="fileList.length < limit && !readonly"
+      >
         <input
           class="vux-uploader_input"
           ref="input"
@@ -176,11 +182,16 @@ export default {
         }
         Promise.all(
           Array.prototype.map.call(inputChangeFiles, file => {
-            return handleFile(file, {
-              maxWidth,
-              quality,
-              enableCompress
-            }).then(blob => {
+            const doSquash = file.type === 'image/jpeg'
+            return handleFile(
+              file,
+              {
+                maxWidth,
+                quality,
+                enableCompress
+              },
+              doSquash
+            ).then(blob => {
               const blobURL = URL.createObjectURL(blob)
               const fileItem = {
                 url: blobURL,

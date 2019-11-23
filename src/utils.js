@@ -147,7 +147,7 @@ function dataURItoBlob(dataURI) {
 /**
  * convert blob to canvas to blob
  */
-function handleFile(file, options) {
+function handleFile(file, options, doSquash) {
   return new Promise((resolve, reject) => {
     const { maxWidth, quality, enableCompress } = options;
     const canvas = document.createElement("canvas");
@@ -168,7 +168,7 @@ function handleFile(file, options) {
           w /= 2;
           h /= 2;
         }
-        const vertSquashRatio = detectVerticalSquash(image);
+        const vertSquashRatio = doSquash ? detectVerticalSquash(image) : 1;
         const dw = enableCompress ? Math.min(Number(maxWidth), w) : w;
         const dh = h * (dw / w) / vertSquashRatio;
         transformCoordinate(canvas, ctx, dw, dh, orientation);
