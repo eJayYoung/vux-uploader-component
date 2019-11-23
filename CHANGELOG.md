@@ -1,3 +1,13 @@
+<a name="1.0.16"></a>
+## [1.0.16](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.15...v1.0.16) (2019-11-23)
+
+
+### Bug Fixes
+
+* image/png should not doSquash ([fe10152](https://github.com/eJayYoung/vux-uploader-component/commit/fe10152))
+
+
+
 <a name="1.0.15"></a>
 ## [1.0.15](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.14...v1.0.15) (2019-11-09)
 
