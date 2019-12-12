@@ -117,7 +117,9 @@ npm install -S vux-uploader-component
 | maxWidth       | String \| Number  | 1024       | 图片压缩最大宽度                                       |
 | quality        | String \| Number  | 0.92       | 图片压缩率                                             |
 | url            | String            | -          | 上传服务器 url                                         |
-| params         | Object            | -          | 上传文件时携带的自定义参数                             |
+| headers        | Object            | {}         | 上传文件时自定义请求头                                  |
+| withCredentials| Boolean           | -          | 设置为`true`的话，支持标准CORS设置cookie值               |
+| params         | Object            | -          | 上传文件时自定义参数                             |
 | name           | String            | 'file'     | 上传文件时 FormData 的 Key，默认为 file                |
 | autoUpload     | Boolean           | true       | 是否自动开启上传                                       |
 | multiple       | String \| Boolean | ""         | 是否支持多选, `false`为不支持                          |
@@ -167,6 +169,7 @@ npm install -S vux-uploader-component
 - [x] 支持多选
 - [x] 支持 v-model 获取 FileList
 - [X] 接入Photoswipe，增强预览功能
+- [X] xhr支持自定义头部和withCredentials
 
 ## Development
 
