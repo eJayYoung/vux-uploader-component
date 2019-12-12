@@ -14,6 +14,10 @@
           linkid: '2323',
           modelname: 'modelname'
         }"
+        :headers="{
+          'custom-header': 'custom-info',
+        }"
+        withCredentials
         @on-change="onChange"
         @on-cancel="onCancel"
         @on-success="onSuccess"

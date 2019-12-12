@@ -108,6 +108,14 @@ export default {
     url: {
       type: String
     },
+    headers: {
+      type: Object,
+      default: () => {}
+    },
+    withCredentials: {
+      type: Boolean,
+      default: false
+    },
     params: {
       type: Object
     },
@@ -244,7 +252,7 @@ export default {
     uploadFile(blob, fileItem) {
       return new Promise((resolve, reject) => {
         const me = this
-        const { url, params, name } = me
+        const { url, params, name, headers, withCredentials } = me
         me.$set(fileItem, 'fetchStatus', 'progress')
         me.$set(fileItem, 'progress', 0)
         const formData = new FormData()
@@ -279,7 +287,19 @@ export default {
           },
           false
         )
+
         xhr.open('POST', url, true)
+
+        for (let key in headers) {
+          if (headers.hasOwnProperty(key) && headers[key] !== null) {
+            xhr.setRequestHeader(key, headers[key])
+          }
+        }
+
+        if (withCredentials && 'withCredentials' in xhr) {
+          xhr.withCredentials = true
+        }
+
         xhr.send(formData)
       })
     }

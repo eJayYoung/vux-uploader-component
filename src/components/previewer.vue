@@ -89,7 +89,9 @@ export default {
         if (goToIndex > this.photoswipe.items.length - 1) {
           goToIndex = 0
         }
-        this.photoswipe.goTo(goToIndex)
+        if (goToIndex > 0) {
+          this.photoswipe.goTo(goToIndex)
+        }
         this.photoswipe.updateSize(true)
         this.photoswipe.ui.update()
       } else if (!newVal.length) {
