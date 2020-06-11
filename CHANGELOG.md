@@ -1,3 +1,13 @@
+<a name="1.0.17"></a>
+## [1.0.17](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.16...v1.0.17) (2019-12-12)
+
+
+### Features
+
+* xhr support custom header & withCredentials ([5e98c0a](https://github.com/eJayYoung/vux-uploader-component/commit/5e98c0a))
+
+
+
 <a name="1.0.16"></a>
 ## [1.0.16](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.15...v1.0.16) (2019-11-23)
 
