@@ -122,10 +122,13 @@ function transformCoordinate(canvas, ctx, width, height, orientation) {
 function dataURItoBlob(dataURI) {
   // convert base64 to raw binary data held in a string
   // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-  var byteString = atob(dataURI.split(',')[1]);
+  var byteString = atob(dataURI.split(",")[1]);
 
   // separate out the mime component
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+  var mimeString = dataURI
+    .split(",")[0]
+    .split(":")[1]
+    .split(";")[0];
 
   // write the bytes of the string to an ArrayBuffer
   var ab = new ArrayBuffer(byteString.length);
@@ -135,13 +138,12 @@ function dataURItoBlob(dataURI) {
 
   // set the bytes of the buffer to the correct values
   for (var i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
+    ia[i] = byteString.charCodeAt(i);
   }
 
   // write the ArrayBuffer to a blob, and you're done
-  var blob = new Blob([ab], {type: mimeString});
+  var blob = new Blob([ab], { type: mimeString });
   return blob;
-
 }
 
 /**
@@ -170,18 +172,52 @@ function handleFile(file, options, doSquash) {
         }
         const vertSquashRatio = doSquash ? detectVerticalSquash(image) : 1;
         const dw = enableCompress ? Math.min(Number(maxWidth), w) : w;
-        const dh = h * (dw / w) / vertSquashRatio;
-        transformCoordinate(canvas, ctx, dw, dh, orientation);
-        ctx.clearRect(0, 0, dw, dh);
-        ctx.drawImage(image, 0, 0, dw, dh);
-        URL.revokeObjectURL(image.src);
-        canvas.toBlob(blob => {
-          resolve(blob);
-        }, "image/jpeg", quality);
+        const dh = (h * (dw / w)) / vertSquashRatio;
+        detectImageAutoRotate().then(isImageAutoRotate => {
+          console.log('detectImageAutoRotate:', isImageAutoRotate);
+          if (!isImageAutoRotate) {
+            transformCoordinate(canvas, ctx, dw, dh, orientation);
+          } else {
+            canvas.width = dw;
+            canvas.height = dh;
+          }
+          ctx.clearRect(0, 0, dw, dh);
+          ctx.drawImage(image, 0, 0, dw, dh);
+          URL.revokeObjectURL(image.src);
+          canvas.toBlob(
+            blob => {
+              resolve(blob);
+            },
+            "image/jpeg",
+            quality
+          );
+        })
       });
-    }
+    };
     image.onerror = err => reject(err);
   });
+}
+
+/**
+ * https://github.com/Mawi137/ngx-image-cropper/issues/306#issuecomment-611771078
+ * 判断图片是否被浏览器自动旋转
+ */
+function detectImageAutoRotate() {
+  // 一张 2x1 的 JPEG 图片, EXIF Orientation: 6
+  const testAutoOrientationImageURL = "data:image/jpeg;base64,/9j/4QAiRXhpZgAATU0AKgAAAAgAAQESAAMAAAABAAYAAAAAAAD/2wCEAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAf/AABEIAAEAAgMBEQACEQEDEQH/xABKAAEAAAAAAAAAAAAAAAAAAAALEAEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/8H//2Q==";
+  let isImageAutoRotate;
+  return new Promise(resolve => {
+    if (isImageAutoRotate === undefined) {
+      const img = new Image();
+      img.onload = () => {
+        isImageAutoRotate = img.width === 1 && img.height === 2;
+        resolve(isImageAutoRotate);
+      };
+      img.src = testAutoOrientationImageURL;
+    } else {
+      resolve(isImageAutoRotate);
+    }
+  })
 }
 
 export {
@@ -190,4 +226,5 @@ export {
   transformCoordinate,
   dataURItoBlob,
   handleFile,
+  detectImageAutoRotate,
 };
