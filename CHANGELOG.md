@@ -1,3 +1,13 @@
+<a name="1.0.18"></a>
+## [1.0.18](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.17...v1.0.18) (2020-06-12)
+
+
+### Bug Fixes
+
+* image auto rotate in ios13.4 ([a484617](https://github.com/eJayYoung/vux-uploader-component/commit/a484617))
+
+
+
 <a name="1.0.17"></a>
 ## [1.0.17](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.16...v1.0.17) (2019-12-12)
 
