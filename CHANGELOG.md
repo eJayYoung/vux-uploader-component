@@ -1,3 +1,8 @@
+<a name="1.0.20"></a>
+## [1.0.20](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.19...v1.0.20) (2020-08-24)
+
+
+
 <a name="1.0.19"></a>
 ## [1.0.19](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.18...v1.0.19) (2020-08-24)
 
