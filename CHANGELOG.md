@@ -1,3 +1,13 @@
+<a name="1.0.19"></a>
+## [1.0.19](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.18...v1.0.19) (2020-08-24)
+
+
+### Bug Fixes
+
+* handleFile 返回blob更换为File，用于保存原始filename ([9e4321c](https://github.com/eJayYoung/vux-uploader-component/commit/9e4321c))
+
+
+
 <a name="1.0.18"></a>
 ## [1.0.18](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.17...v1.0.18) (2020-06-12)
 
