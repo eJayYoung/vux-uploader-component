@@ -35,15 +35,15 @@ import Uploader from '../src/index'
 export default {
   name: 'app',
   components: {
-    Uploader
+    Uploader,
   },
   data() {
     return {
       fileList: [
         {
-          url: './assets/pic_160.png'
-        }
-      ]
+          url: './assets/pic_160.png',
+        },
+      ],
     }
   },
   mounted() {
@@ -67,13 +67,13 @@ export default {
     onError(res) {
       console.log('on-error: ', res)
     },
-    onDelete(cb) {
+    onDelete(deleteItem, cb) {
       // setTimeout(() => {
-      console.log('on-delete: ', JSON.parse(JSON.stringify(this.fileList)))
+      console.log('on-delete: ', deleteItem)
       cb && cb()
       // }, 3000);
-    }
-  }
+    },
+  },
 }
 </script>
 
