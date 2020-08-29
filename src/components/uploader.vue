@@ -70,105 +70,105 @@ const URL =
 export default {
   name: 'Uploader',
   components: {
-    Priviewer
+    Priviewer,
   },
   model: {
     prop: 'files',
-    event: 'on-fileList-change'
+    event: 'on-fileList-change',
   },
   props: {
     title: {
       type: String,
-      default: '图片上传'
+      default: '图片上传',
     },
     files: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     limit: {
       type: Number | String,
-      default: 5
+      default: 5,
     },
     capture: {
       type: Boolean | String,
-      default: false
+      default: false,
     },
     enableCompress: {
       type: Boolean,
-      default: true
+      default: true,
     },
     maxWidth: {
       type: String | Number,
-      default: 1024
+      default: 1024,
     },
     quality: {
       type: String | Number,
-      default: 0.92
+      default: 0.92,
     },
     url: {
-      type: String
+      type: String,
     },
     headers: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     withCredentials: {
       type: Boolean,
-      default: false
+      default: false,
     },
     params: {
-      type: Object
+      type: Object,
     },
     name: {
       type: String,
-      default: 'file'
+      default: 'file',
     },
     autoUpload: {
       type: Boolean,
-      default: true
+      default: true,
     },
     multiple: {
       type: String | Boolean,
-      default: ''
+      default: '',
     },
     readonly: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       fileList: this.files,
       currentIndex: 0,
-      previewerIndex: 0
+      previewerIndex: 0,
     }
   },
   filters: {
     filterList(list = []) {
-      return list.map(item => {
+      return list.map((item) => {
         const { url } = item
         return {
           src: url,
           msrc: url,
           w: 0,
-          h: 0
+          h: 0,
         }
       })
-    }
+    },
   },
   watch: {
     files: {
       deep: true,
       handler(files) {
         this.fileList = files
-      }
+      },
     },
     fileList: {
       deep: true,
       handler(fileList) {
         this.$emit('on-fileList-change', fileList)
-      }
-    }
+      },
+    },
   },
   methods: {
     async change(e) {
@@ -179,7 +179,7 @@ export default {
         limit,
         fileList,
         autoUpload,
-        uploadFile
+        uploadFile,
       } = this
       const target = e.target || e.srcElement
       const inputChangeFiles = target.files
@@ -189,21 +189,21 @@ export default {
           return
         }
         Promise.all(
-          Array.prototype.map.call(inputChangeFiles, file => {
+          Array.prototype.map.call(inputChangeFiles, (file) => {
             const doSquash = file.type === 'image/jpeg'
             return handleFile(
               file,
               {
                 maxWidth,
                 quality,
-                enableCompress
+                enableCompress,
               },
               doSquash
-            ).then(blob => {
+            ).then((blob) => {
               const blobURL = URL.createObjectURL(blob)
               const fileItem = {
                 url: blobURL,
-                blob
+                blob,
               }
               for (let key in file) {
                 if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
@@ -212,11 +212,11 @@ export default {
               }
               if (autoUpload) {
                 uploadFile(blob, fileItem)
-                  .then(result => {
+                  .then((result) => {
                     fileList.push(fileItem)
                     this.$emit('on-change', fileItem, fileList)
                   })
-                  .catch(e => {
+                  .catch((e) => {
                     fileList.push(fileItem)
                   })
               } else {
@@ -239,12 +239,15 @@ export default {
     deleteImg() {
       const { previewerIndex, fileList } = this
       const delFn = () => {
-        this.$emit('on-change', fileList[previewerIndex], fileList)
+        const deleteItem = fileList[previewerIndex]
         fileList.splice(previewerIndex, 1)
-        this.$refs.previewer.close()
+        this.$nextTick(() => {
+          this.$emit('on-change', deleteItem, fileList)
+          this.$refs.previewer.close()
+        })
       }
       if (this.$listeners['on-delete']) {
-        this.$emit('on-delete', delFn)
+        this.$emit('on-delete', fileList[previewerIndex], delFn)
       } else {
         delFn()
       }
@@ -279,7 +282,7 @@ export default {
         }
         xhr.upload.addEventListener(
           'progress',
-          function(evt) {
+          function (evt) {
             if (evt.lengthComputable) {
               const precent = Math.ceil((evt.loaded / evt.total) * 100)
               me.$set(fileItem, 'progress', precent)
@@ -302,8 +305,8 @@ export default {
 
         xhr.send(formData)
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less">
