@@ -188,7 +188,7 @@ function handleFile(file, options, doSquash) {
             blob => {
               resolve(new File([blob], file.name));
             },
-            "image/jpeg",
+            file.type,
             quality
           );
         })
