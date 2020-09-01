@@ -1,3 +1,13 @@
+<a name="1.0.22"></a>
+## [1.0.22](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.21...v1.0.22) (2020-09-01)
+
+
+### Bug Fixes
+
+* replace canvas.toBlob the second parameter to file.type ([1a9fb73](https://github.com/eJayYoung/vux-uploader-component/commit/1a9fb73))
+
+
+
 <a name="1.0.21"></a>
 ## [1.0.21](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.20...v1.0.21) (2020-08-29)
 
