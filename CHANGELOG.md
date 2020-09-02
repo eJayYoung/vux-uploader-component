@@ -1,3 +1,13 @@
+<a name="1.0.23"></a>
+## [1.0.23](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.22...v1.0.23) (2020-09-02)
+
+
+### Bug Fixes
+
+* config export blob new FIle's otion.type as file.type ([1fb91c2](https://github.com/eJayYoung/vux-uploader-component/commit/1fb91c2))
+
+
+
 <a name="1.0.22"></a>
 ## [1.0.22](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.21...v1.0.22) (2020-09-01)
 
