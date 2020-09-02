@@ -186,7 +186,9 @@ function handleFile(file, options, doSquash) {
           URL.revokeObjectURL(image.src);
           canvas.toBlob(
             blob => {
-              resolve(new File([blob], file.name));
+              resolve(new File([blob], file.name, {
+                type: file.type
+              }));
             },
             file.type,
             quality
