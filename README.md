@@ -170,6 +170,7 @@ npm install -S vux-uploader-component
 - [x] 支持 v-model 获取 FileList
 - [X] 接入Photoswipe，增强预览功能
 - [X] xhr支持自定义头部和withCredentials
+- [ ] 改为vue-cli 3.0 打包
 
 ## Development
 
