@@ -1,3 +1,13 @@
+<a name="1.0.24"></a>
+## [1.0.24](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.23...v1.0.24) (2021-03-25)
+
+
+### Features
+
+* support custom limit prompt ([6e19c8f](https://github.com/eJayYoung/vux-uploader-component/commit/6e19c8f))
+
+
+
 <a name="1.0.23"></a>
 ## [1.0.23](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.22...v1.0.23) (2020-09-02)
 
