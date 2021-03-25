@@ -89,6 +89,10 @@ export default {
       type: Number | String,
       default: 5,
     },
+    limitPrompt: {
+      type: Function,
+      default: (limit) => `不能上传超过${limit}张图片`,
+    },
     capture: {
       type: Boolean | String,
       default: false,
@@ -177,6 +181,7 @@ export default {
         maxWidth,
         quality,
         limit,
+        limitPrompt,
         fileList,
         autoUpload,
         uploadFile,
@@ -185,7 +190,7 @@ export default {
       const inputChangeFiles = target.files
       if (inputChangeFiles.length > 0) {
         if (fileList.length + inputChangeFiles.length > limit) {
-          alert(`不能上传超过${limit}张图片`)
+          alert(limitPrompt(limit))
           return
         }
         Promise.all(

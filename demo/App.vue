@@ -17,6 +17,8 @@
         :headers="{
           'custom-header': 'custom-info',
         }"
+        :limit="6"
+        :limitPrompt="limit => `已经上传${limit}张图片嘞！`"
         withCredentials
         @on-change="onChange"
         @on-cancel="onCancel"
