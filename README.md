@@ -112,6 +112,7 @@ npm install -S vux-uploader-component
 | title          | String            | '图片上传' | 组件标题                                               |
 | files          | Array             | []         | 初始化数据源，通过`on-fileList-change`事件绑定 v-model |
 | limit          | Number \| String  | 5          | 限制上传图片个数                                       |
+| limitPrompt    | Function          | ``(limit) => `不能上传超过${limit}张图片` `` | 限制上传alert的提示语   |
 | capture        | Number \| String  | false      | 是否只选择调用相机                                     |
 | enableCompress | Boolean           | true       | 是否压缩                                               |
 | maxWidth       | String \| Number  | 1024       | 图片压缩最大宽度                                       |
@@ -141,7 +142,7 @@ npm install -S vux-uploader-component
 
 ### 返回的 FileItem 格式
 
-目前将 File 对象的属性复制组成 FielItem, FileItem 组成 FileList，便于用户获取 File 对象的信息
+目前将 File 对象的属性复制组成 FileItem, FileItem 组成 FileList，便于用户获取 File 对象的信息
 
 ```json
 {
@@ -170,6 +171,7 @@ npm install -S vux-uploader-component
 - [x] 支持 v-model 获取 FileList
 - [X] 接入Photoswipe，增强预览功能
 - [X] xhr支持自定义头部和withCredentials
+- [X] 自定义限制alert的提示语内容
 - [ ] 改为vue-cli 3.0 打包
 
 ## Development
