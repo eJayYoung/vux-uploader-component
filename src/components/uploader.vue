@@ -13,9 +13,6 @@
             }"
           v-for="(item, index) in fileList"
           :key="index"
-          :style="{
-              backgroundImage: `url(${item.url})`
-            }"
           @click="handleFileClick($event, item, index)"
         >
           <div
@@ -24,10 +21,17 @@
           >
             {{ item.fetchStatus === 'progress' ? item.progress + '%' : '' }}
             <!-- progress !== 0 && progress < 100 -->
-            <i
+            <!-- <i
               v-if="item.fetchStatus === 'fail'"
               class="upload-error"
-            ></i>
+            ></i> -->
+            <i v-if="item.type === 'image/png' || item.type === 'image/jpeg' || item.type === 'image/jpg'" >
+                <img :src="item.url" alt="" width="70" height="79">
+            </i>
+            <i v-if="item.type === 'application/doc' || item.type === 'application/docx'" class="fas fa-file-word fa-6x">{{item.name}}</i>
+            <i v-if="item.type === 'application/pdf'" class="fas fa-file-pdf fa-6x"></i>
+            <i v-if="item.type === 'application/xls' || item.type === 'application/xlsx'" class="fas fa-file-excel fa-6x"></i>
+            <i v-if="item.type === 'application/ppt' || item.type === 'application/pptx'" class="fas fa-file-powerpoint fa-6x"></i>
           </div>
         </li>
       </ul>
@@ -40,7 +44,7 @@
           ref="input"
           type="file"
           name="uploadInput"
-          accept="image/*"
+          accept= "image/*, application/doc, application/docx, application/pdf, application/xls, application/xlsx, application/ppt, application/pptx,"
           :capture="capture"
           :multiple="multiple"
           @change="change"
@@ -53,6 +57,14 @@
       :readonly="readonly"
       @on-delete="deleteImg"
     ></priviewer>
+
+    <div id="overlay" v-if="showOthers">
+      <i class="fas fa-times fa-3x" @click="closeOverlay" id="overlayclose"></i>
+      <div id="embeder">
+          <embed :src="displayItem" width="550" height="650"/>
+      </div>
+      <i class="fas fa-trash fa-3x" @click="deleteOther" id="trash"></i>
+    </div>
   </div>
 </template>
 <script>
@@ -145,6 +157,9 @@ export default {
       fileList: this.files,
       currentIndex: 0,
       previewerIndex: 0,
+      showOthers: false,
+      displayItem: '',
+      otherIndex: null,
     }
   },
   filters: {
@@ -195,40 +210,67 @@ export default {
         }
         Promise.all(
           Array.prototype.map.call(inputChangeFiles, (file) => {
-            const doSquash = file.type === 'image/jpeg'
-            return handleFile(
+            if(file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/gif'){
+              const doSquash = file.type === 'image/jpeg'
+              return handleFile(
               file,
               {
-                maxWidth,
-                quality,
-                enableCompress,
+                  maxWidth,
+                  quality,
+                  enableCompress,
               },
               doSquash
-            ).then((blob) => {
-              const blobURL = URL.createObjectURL(blob)
+              ).then((blob) => {
+                  const blobURL = URL.createObjectURL(blob)
+                  const fileItem = {
+                      url: blobURL,
+                      blob,
+                  }
+                  for (let key in file) {
+                      if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
+                      fileItem[key] = file[key]
+                      }
+                  }
+                  if (autoUpload) {
+                      uploadFile(blob, fileItem)
+                      .then((result) => {
+                          fileList.push(fileItem)
+                          this.$emit('on-change', fileItem, fileList)
+                      })
+                      .catch((e) => {
+                          fileList.push(fileItem)
+                      })
+                  } else {
+                      fileList.push(fileItem)
+                      this.$emit('on-change', fileItem, fileList)
+                  }
+              })
+            }else{
+              var blob = file;
+              const blobURL = URL.createObjectURL(blob);
               const fileItem = {
-                url: blobURL,
-                blob,
-              }
+                  url: blobURL,
+                  blob,
+              };
               for (let key in file) {
                 if (['slice', 'webkitRelativePath'].indexOf(key) === -1) {
                   fileItem[key] = file[key]
-                }
+                };
               }
               if (autoUpload) {
                 uploadFile(blob, fileItem)
                   .then((result) => {
-                    fileList.push(fileItem)
-                    this.$emit('on-change', fileItem, fileList)
+                      fileList.push(fileItem)
+                      this.$emit('on-change', fileItem, fileList)
                   })
                   .catch((e) => {
-                    fileList.push(fileItem)
+                      fileList.push(fileItem)
                   })
-              } else {
-                fileList.push(fileItem)
-                this.$emit('on-change', fileItem, fileList)
-              }
-            })
+                } else {
+                  fileList.push(fileItem)
+                  this.$emit('on-change', fileItem, fileList)
+                }
+            }
           })
         ).then(() => {
           this.$refs.input.value = ''
@@ -238,8 +280,17 @@ export default {
       }
     },
     handleFileClick(e, item, index) {
-      this.$refs.previewer.show(index)
-      this.previewerIndex = index
+      if(item.type == item.type === 'image/png' || item.type === 'image/jpeg' || item.type === 'image/jpg'){
+        this.$refs.previewer.show(index)
+        this.previewerIndex = index
+      }else{
+        this.showOthers = !this.showOthers;
+        this.displayItem = item.url;
+        this.otherIndex = index;
+      }
+    },
+    closeOverlay(){
+        this.showOthers = !this.showOthers
     },
     deleteImg() {
       const { previewerIndex, fileList } = this
@@ -255,6 +306,22 @@ export default {
         this.$emit('on-delete', fileList[previewerIndex], delFn)
       } else {
         delFn()
+      }
+    },
+    deleteOther(){
+      const { otherIndex, fileList } = this
+      const delFn = () => {
+          const deleteItem = fileList[otherIndex]
+          fileList.splice(otherIndex, 1)
+          this.$nextTick(() => {
+              this.$emit('on-change', deleteItem, fileList)
+              this.showOthers = !this.showOthers
+          })
+      }
+      if (this.$listeners['on-delete']) {
+          this.$emit('on-delete', fileList[otherIndex], delFn)
+      } else {
+          delFn()
       }
     },
     uploadFile(blob, fileItem) {
@@ -419,4 +486,39 @@ export default {
     }
   }
 }
+</style>
+<style lang="css" scoped>
+  #overlay {
+    position: fixed;
+    /* display: none; */
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.9);
+    z-index: 2;
+    cursor: pointer;
+  } 
+  #embeder{
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+  }
+  #overlayclose{
+    color:antiquewhite;
+    z-index: 5;
+    padding: 10px;
+  }
+  #trash{
+    color:rgb(244, 179, 180);
+    z-index: 5;
+    padding: 10px;
+    position: sticky;
+    top: 90%;
+    left: 100%;
+  }
 </style>
