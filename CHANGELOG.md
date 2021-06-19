@@ -1,3 +1,13 @@
+<a name="1.0.25"></a>
+## [1.0.25](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.24...v1.0.25) (2021-06-19)
+
+
+### Bug Fixes
+
+* delete image uncorrect when swipe preview image ([eccaadb](https://github.com/eJayYoung/vux-uploader-component/commit/eccaadb))
+
+
+
 <a name="1.0.24"></a>
 ## [1.0.24](https://github.com/eJayYoung/vux-uploader-component/compare/v1.0.23...v1.0.24) (2021-03-25)
 

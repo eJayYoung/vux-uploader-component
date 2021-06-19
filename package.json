@@ -1,7 +1,7 @@
 {
   "name": "vux-uploader-component",
   "description": "a html5 vue component implementation for weui uploader",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "author": "eJay",
   "license": "MIT",
   "main": "dist/uploader.js",
