@@ -82,7 +82,7 @@ export default {
         return
       }
       if (newVal.length && newVal.length - oldVal.length === -1) {
-        const index = this.photoswipe.getCurrentIndex()
+        const index = this.getCurrentIndex()
         this.photoswipe.invalidateCurrItems()
         this.photoswipe.items.splice(index, 1)
         let goToIndex = index
@@ -145,7 +145,7 @@ export default {
       })
       this.photoswipe.listen('afterChange', (a, b) => {
         this.$emit('on-index-change', {
-          currentIndex: this.photoswipe.getCurrentIndex()
+          currentIndex: this.getCurrentIndex()
         })
       })
     },
@@ -170,7 +170,7 @@ export default {
       this.photoswipe && this.photoswipe.next()
     },
     handleDelete() {
-      this.$emit('on-delete')
+      this.$emit('on-delete', this.getCurrentIndex())
     }
   }
 }
