@@ -144,7 +144,6 @@ export default {
     return {
       fileList: this.files,
       currentIndex: 0,
-      previewerIndex: 0,
     }
   },
   filters: {
@@ -239,20 +238,19 @@ export default {
     },
     handleFileClick(e, item, index) {
       this.$refs.previewer.show(index)
-      this.previewerIndex = index
     },
-    deleteImg() {
-      const { previewerIndex, fileList } = this
+    deleteImg(index) {
+      const { fileList } = this
       const delFn = () => {
-        const deleteItem = fileList[previewerIndex]
-        fileList.splice(previewerIndex, 1)
+        const deleteItem = fileList[index]
+        fileList.splice(index, 1)
         this.$nextTick(() => {
           this.$emit('on-change', deleteItem, fileList)
           this.$refs.previewer.close()
         })
       }
       if (this.$listeners['on-delete']) {
-        this.$emit('on-delete', fileList[previewerIndex], delFn)
+        this.$emit('on-delete', fileList[index], delFn)
       } else {
         delFn()
       }
