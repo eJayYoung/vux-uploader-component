@@ -189,7 +189,6 @@ export default {
       const inputChangeFiles = target.files
       if (inputChangeFiles.length > 0) {
         if (fileList.length + inputChangeFiles.length > limit) {
-          alert(limitPrompt(limit))
           return
         }
         Promise.all(
